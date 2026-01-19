@@ -1,3 +1,6 @@
 streamlit
 gspread
 google-auth
+streamlit
+gspread
+oauth2client
