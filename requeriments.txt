@@ -1,1 +1,3 @@
-pip install gspread google-auth
+streamlit
+gspread
+google-auth
