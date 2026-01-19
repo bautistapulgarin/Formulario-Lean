@@ -1,22 +1,17 @@
 import streamlit as st
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import json
 
-# Configuración básica
-st.set_page_config(
-    page_title="Formulario base",
-    layout="centered"
-)
+json_creds = st.secrets["GSPREAD_CREDS"]
+creds_dict = json.loads(json_creds)
 
-# CSS para ocultar elementos de Streamlit
-hide_streamlit_style = """
-    <style>
-    #MainMenu {visibility: hidden;}
-    header {visibility: hidden;}
-    footer {visibility: hidden;}
-    </style>
-"""
+scope = ["https://spreadsheets.google.com/feeds",
+         "https://www.googleapis.com/auth/drive"]
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+client = gspread.authorize(creds)
 
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+# Abrir hoja por ID
+sheet = client.open_by_key("1G8GvBqkTs7WamLRe_h-s9tJxRCCsNtmZEl15WXIggP4").sheet1
 
-# Contenido principal
-st.title("Formulario en construcción")
-st.write("Este es el punto de partida del formulario.")
+st.write(sheet.get_all_records())
