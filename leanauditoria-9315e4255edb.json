@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "leanauditoria",
+  "private_key_id": "9315e4255edb90529918cae0fed5eff9e4d7aff0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCjz+T7BNlxxF2r\n+B+7tCXlJ9QBo+d+VwpuOEiA4QpGOsjFNBYLytSuH5U0M65ptQznTOgpuG/VovZT\nkGzZQLnG8WmFDM38NZ7S8O0mpJyZCIE7IXoFFAAle4NPvAWz8mp6+1ZwJPFu+5Da\nrQ5dNuGl6DY4dsclr4KC7eSr7D5GgyVoAi+0BeHpNte1qpgzS2NSZuXuFdki3CFo\nKXe0262NZVGUV7Xbm6Denol7ADuv5kMOf1qqEVvfKlRUo2fmPBhsLo4nUzU5HtlP\n0Jh2nwybR8t3QALosDkJ2rWSCvvObbtAwuSFOYWyWblSQUaBejcMBpKfMYIVsdWJ\n4DH+5W7VAgMBAAECggEAUdKC3nsynafm3gIG37wA/bBiLhuPgsS5Ogq09GLzvdaY\n+B+nL2a1yu+NmFCEOtqrQlFg2Y39lmlavqyyIeY5pUxqV4Ho1aR224hp/FZWvf3I\nhx+WkjjGRfKmyUnyU0qvsxQdvdBGJBhV51Rvi1HhbfxKMPPrT0CWYQ2wnctX4+HK\nuQlu2Dvw7JCRmsk2yZTt/5dUj+vhRVUFL8YtMHYnNHe84v0lyW3g5O43u0VPL5bh\nEckMqOfA9rpN7p6hVetwT9n+DoWcUrnucCyv51YvwGET106//RfY/prfZu0tXfOz\nFESwQJRzLLuL28vGFFYI1xnCFcj9P5Gl/jSTsFkiFQKBgQDdTzBwqRa44ZTbJHSW\n2o27C6n7u4oUGFzgOU5KVgFt2ATRCPA19nXXiOdCED2xzxH/M1LMy9bxjyciwy53\nOY8vlwWtxsAV0TSA7Jo+IiiDP0gWZkd8icrqmSJbhsSHMlDHhKM/RuByICRfkm1p\ndGsKpArMOfeN/jRlzraeL0QNrwKBgQC9fW1fZvFPRHqwGMlSLf0zf5bqGAQLqkfd\n3amEpBNpHM9IZXmnBhTyWKvRI0oH5YVYMRZ3SH78QKyz8zkFUOWzArQCblNVRSDe\nHXofpUkxfjbe2Pjn4FkCGCHHNdJEEVcKphhuV6gydc6WErH2j2qNnMYwNWt6yxny\n9UlsO5OQuwKBgFVSuZdF6ae/+PcAOB8NBgWuOov+Qv76YZxlG6UXQZfK6Bh7fLkh\nW0+MzbQvtMl/zy136R1iHW2mRm1lmN2IiIbNj/fun5IJxVdLYTBBVSM825sfNcJz\nEZOfFJr6+3wwTuqNXa8AsXnuoHdkaeB1bOt+UVdppeLNtf/mUYvtJyyrAoGALPaZ\nQF0N/5AxSJ3pD44IGfM5nTyroRT7zqKteeLxFC0Y5oXlswNXbxYpVwv3oh4NYRrs\nyMs0DqlOEbkyG5fRmYOXsUf6kC5CGVKHSwEOeCcJ4CE+Fs9+b2fIhBu6VBqFO+qj\nu3MjXy3jIms3PVlUoFvGD2Rtp4qQEr2veXY9kscCgYEAyFhxxav3kvgZv2+L8eEW\nHEjThhjn8qu8J93vFRWI+sCER+orCO+RRDacGvlRPl7ra0Z0u1UUcQH9teC4N6rj\nYEQ02gtXD9ZCjIg5B+wGAkOxEXC0JUozTI9ayKQVmf7LPkjmExNZKdC11RFno1P8\nzwcW5UCFb87JUUioA7dfuKU=\n-----END PRIVATE KEY-----\n",
+  "client_email": "leanauditoria@leanauditoria.iam.gserviceaccount.com",
+  "client_id": "111882460615636778250",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/leanauditoria%40leanauditoria.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
