@@ -3,32 +3,35 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 # -------------------------------
-# Configuración de Google Sheets
+# CONFIGURACIÓN GOOGLE SHEETS
 # -------------------------------
-JSON_FILE = "leanauditoria-9315e4255edb.json"  # Tu archivo JSON subido
+JSON_FILE = "leanauditoria-9315e4255edb.json"  # JSON subido en Streamlit Cloud
 SHEET_ID = "1G8GvBqkTs7WamLRe_h-s9tJxRCCsNtmZEl15WXIggP4"  # ID de la hoja
 
-# Alcances de Google Sheets y Drive
+# Alcances necesarios
 scope = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive"
 ]
 
-# Autenticación
-creds = Credentials.from_service_account_file(JSON_FILE, scopes=scope)
-client = gspread.authorize(creds)
-
-# Abrir la primera hoja
-sheet = client.open_by_key(SHEET_ID).sheet1
+# Conexión y autenticación
+try:
+    creds = Credentials.from_service_account_file(JSON_FILE, scopes=scope)
+    client = gspread.authorize(creds)
+    sheet = client.open_by_key(SHEET_ID).sheet1
+except Exception as e:
+    st.error("No se pudo conectar con Google Sheets. "
+             "Verifica que la hoja esté compartida con el service account y que el JSON sea correcto.")
+    st.stop()
 
 # -------------------------------
-# Configuración de Streamlit
+# CONFIGURACIÓN STREAMLIT
 # -------------------------------
 st.set_page_config(page_title="Formulario Lean Auditoria", layout="centered")
 st.title("Formulario Lean Auditoria")
-st.write("Por favor completa los campos para registrar la información del proyecto.")
+st.write("Completa los campos para registrar información del proyecto.")
 
-# CSS para ocultar menú y footer de Streamlit
+# Ocultar menú, header y footer
 hide_streamlit_style = """
     <style>
     #MainMenu {visibility: hidden;}
@@ -39,7 +42,7 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # -------------------------------
-# Formulario de datos
+# FORMULARIO DE DATOS
 # -------------------------------
 with st.form(key="lean_form"):
     nombre = st.text_input("Nombre del responsable")
@@ -50,12 +53,16 @@ with st.form(key="lean_form"):
     submit_button = st.form_submit_button("Enviar")
 
 # -------------------------------
-# Guardar datos en Google Sheets
+# GUARDAR DATOS EN GOOGLE SHEETS
 # -------------------------------
 if submit_button:
-    if nombre.strip() == "" or proyecto.strip() == "":
+    if not nombre.strip() or not proyecto.strip():
         st.warning("Por favor completa los campos Nombre y Proyecto antes de enviar.")
     else:
-        nueva_fila = [nombre, proyecto, avance, observaciones]
-        sheet.append_row(nueva_fila)
-        st.success("Datos enviados correctamente!")
+        try:
+            nueva_fila = [nombre, proyecto, avance, observaciones]
+            sheet.append_row(nueva_fila)
+            st.success("Datos enviados correctamente!")
+        except Exception as e:
+            st.error("Ocurrió un error al enviar los datos. "
+                     "Verifica los permisos de la hoja y vuelve a intentarlo.")
