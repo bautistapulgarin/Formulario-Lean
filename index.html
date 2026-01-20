@@ -1,33 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Formulario de Obra</title>
-  <!-- SDK de Firebase -->
+  <title>Auditoría Lean Construction</title>
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #ffffff;
+      color: #1d1d1f;
+      text-align: center;
+    }
+
+    .screen {
+      display: none;
+      min-height: 100vh;
+      padding: 60px 20px;
+      box-sizing: border-box;
+    }
+
+    .active {
+      display: block;
+    }
+
+    h1 {
+      font-size: 36px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 400;
+      color: #6e6e73;
+      margin-bottom: 40px;
+    }
+
+    button {
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 24px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #005bb5;
+    }
+
+    form {
+      max-width: 600px;
+      margin: auto;
+      text-align: left;
+    }
+
+    label {
+      font-weight: 500;
+      display: block;
+      margin-top: 20px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #d2d2d7;
+      font-size: 15px;
+    }
+
+    .success {
+      color: #0071e3;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
+
 <body>
 
-<h2>Registro de Obra</h2>
+<!-- SPLASH -->
+<div id="splash" class="screen active">
+  <h1>Auditoría Lean Construction</h1>
+  <h2>Evaluación del nivel de madurez en obra</h2>
+  <button onclick="mostrarResponsables()">Iniciar auditoría</button>
+</div>
 
-<form id="formulario">
-  <label>Nombre:</label><br>
-  <input type="text" name="nombre" required><br><br>
+<!-- SELECCIÓN RESPONSABLE -->
+<div id="responsables" class="screen">
+  <h1>Seleccione el responsable</h1>
 
-  <label>Email:</label><br>
-  <input type="email" name="email" required><br><br>
+  <button onclick="seleccionarResponsable('Ing. Juan Romero - Dirección Nacional')">
+    Dirección Nacional
+  </button>
 
-  <label>Mensaje:</label><br>
-  <textarea name="mensaje" required></textarea><br><br>
+  <button onclick="seleccionarResponsable('Ing. Camilo Pulgarin - Sucursal Bogotá')">
+    Sucursal Bogotá
+  </button>
 
-  <button type="submit">Enviar</button>
-</form>
+  <button onclick="seleccionarResponsable('Ing. Paola Ramirez - Sucursal Bucaramanga')">
+    Sucursal Bucaramanga
+  </button>
+
+  <button onclick="seleccionarResponsable('Ing. Daniela Herrera - Sucursal Costa')">
+    Sucursal Costa
+  </button>
+</div>
+
+<!-- FORMULARIO -->
+<div id="formularioScreen" class="screen">
+  <h1 id="bienvenida"></h1>
+
+  <form id="formAuditoria">
+    <label>Tipo de reunión evaluada</label>
+    <select name="tipoReunion" required>
+      <option value="">Seleccione una opción</option>
+      <option value="Intermedia - Equipo Administrativo">
+        Intermedia (Equipo Administrativo)
+      </option>
+      <option value="Semanal - Contratistas y Obra">
+        Semanal (Contratistas / Directores / Residentes)
+      </option>
+    </select>
+
+    <label>Nivel de cumplimiento Lean observado</label>
+    <select name="nivelMadurez" required>
+      <option value="">Seleccione una opción</option>
+      <option value="Inicial">Inicial</option>
+      <option value="En desarrollo">En desarrollo</option>
+      <option value="Estandarizado">Estandarizado</option>
+      <option value="Optimizado">Optimizado</option>
+    </select>
+
+    <button type="submit" style="margin-top:30px;">Guardar auditoría</button>
+  </form>
+
+  <div id="mensajeExito" class="success"></div>
+</div>
 
 <script>
-  // -----------------------------
-  // 1. Configuración de Firebase
-  // -----------------------------
+  // Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyBlRbAQZVSWSZgNw8w4Iie7WsdSdogRX5o",
     authDomain: "formularioobra.firebaseapp.com",
@@ -37,34 +158,45 @@
     appId: "1:483554481916:web:c2b175955247a1b6f56979"
   };
 
-  // Inicializar Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  // -----------------------------
-  // 2. Manejar el envío del formulario
-  // -----------------------------
-  const formulario = document.getElementById('formulario');
-  formulario.addEventListener('submit', function(e) {
-    e.preventDefault(); // Evita que la página se recargue
+  let ResponsableRegistro = "";
 
-    const nombre = formulario.nombre.value;
-    const email = formulario.email.value;
-    const mensaje = formulario.mensaje.value;
+  function mostrarResponsables() {
+    document.getElementById("splash").classList.remove("active");
+    document.getElementById("responsables").classList.add("active");
+  }
 
-    // Guardar en Firestore
-    db.collection("registros").add({
-      nombre: nombre,
-      email: email,
-      mensaje: mensaje,
-      fecha: new Date()
+  function seleccionarResponsable(responsable) {
+    ResponsableRegistro = responsable;
+
+    document.getElementById("responsables").classList.remove("active");
+    document.getElementById("formularioScreen").classList.add("active");
+
+    document.getElementById("bienvenida").innerText =
+      "Bienvenido, " + responsable;
+  }
+
+  document.getElementById("formAuditoria").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const tipoReunion = this.tipoReunion.value;
+    const nivelMadurez = this.nivelMadurez.value;
+
+    db.collection("auditoriasLean").add({
+      ResponsableRegistro: ResponsableRegistro,
+      TipoReunion: tipoReunion,
+      NivelMadurez: nivelMadurez,
+      FechaRegistro: new Date()
     })
     .then(() => {
-      alert("¡Registro enviado correctamente!");
-      formulario.reset(); // Limpia el formulario
+      document.getElementById("mensajeExito").innerText =
+        "Auditoría registrada correctamente.";
+      this.reset();
     })
-    .catch((error) => {
-      alert("Error al enviar: " + error);
+    .catch(error => {
+      alert("Error al guardar: " + error);
     });
   });
 </script>
