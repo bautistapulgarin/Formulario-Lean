@@ -228,6 +228,101 @@
       width: auto;
       min-width: 200px;
     }
+
+    /* NUEVOS ESTILOS PARA EVALUACIÓN DE ASISTENCIA */
+    .asistencia-container {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .tipo-reunion-info {
+      background-color: #f0f8ff;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      border-left: 4px solid #0071e3;
+    }
+
+    .participante-item {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #e5e5ea;
+    }
+
+    .participante-info {
+      flex: 1;
+    }
+
+    .participante-nombre {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .participante-peso {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .asistencia-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .asistencia-checkbox {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    .total-asistencia {
+      background-color: #0071e3;
+      color: white;
+      padding: 25px;
+      border-radius: 12px;
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .total-porcentaje {
+      font-size: 36px;
+      font-weight: 700;
+      margin: 10px 0;
+    }
+
+    .contratistas-container {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #fff8e1;
+      border-radius: 8px;
+      border: 1px solid #ffd54f;
+    }
+
+    .contratista-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .contratista-item:last-child {
+      border-bottom: none;
+    }
+
+    .nota-info {
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+      font-style: italic;
+    }
   </style>
 </head>
 
@@ -237,7 +332,7 @@
 <div id="splashInicial">
   <h1>Madurez Lean Construction</h1>
   <div class="empresa">MARVAL S.A.</div>
-  <div class="version">Formulario Lean Versión 1.1</div>
+  <div class="version">Formulario Lean Versión 1.2</div>
 </div>
 
 <!-- SPLASH (Original) -->
@@ -290,6 +385,47 @@
   <button class="back-button" onclick="volverAResponsables()">← Volver a selección de responsable</button>
 </div>
 
+<!-- NUEVA PANTALLA: SELECCIÓN DE TIPO DE REUNIÓN -->
+<div id="tipoReunionScreen" class="screen">
+  <h1 id="bienvenidaTipoReunion"></h1>
+  <h2 id="infoProyectoTipoReunion"></h2>
+
+  <div class="tipo-reunion-info">
+    <h3>Seleccione el tipo de reunión a auditar</h3>
+    <p>Esta selección determinará el sistema de evaluación de asistencia</p>
+  </div>
+
+  <div style="max-width: 400px; margin: 40px auto;">
+    <button style="width: 100%; margin-bottom: 20px; padding: 20px; font-size: 18px;" onclick="seleccionarTipoReunion('Intermedia - Equipo Administrativo')">
+      📊 Reunión Intermedia<br>
+      <small>Equipo Administrativo</small>
+    </button>
+
+    <button style="width: 100%; padding: 20px; font-size: 18px;" onclick="seleccionarTipoReunion('Semanal - Contratistas y Obra')">
+      📋 Reunión Semanal<br>
+      <small>Contratistas / Directores / Residentes</small>
+    </button>
+  </div>
+
+  <button class="back-button" onclick="volverAProyectosDesdeTipoReunion()">← Volver a selección de proyecto</button>
+</div>
+
+<!-- NUEVA PANTALLA: EVALUACIÓN DE ASISTENCIA -->
+<div id="asistenciaScreen" class="screen">
+  <h1 id="tituloAsistencia"></h1>
+  <h2 id="subtituloAsistencia"></h2>
+
+  <div class="asistencia-container" id="contenedorAsistencia">
+    <!-- El contenido se genera dinámicamente según el tipo de reunión -->
+  </div>
+
+  <button id="btnContinuarAsistencia" style="margin-top: 30px;" onclick="continuarAFormulario()" disabled>
+    Continuar al formulario principal
+  </button>
+  
+  <button class="back-button" onclick="volverATipoReunion()">← Volver a selección de tipo de reunión</button>
+</div>
+
 <!-- FORMULARIO COMPLETO -->
 <div id="formularioScreen" class="screen">
   <h1 id="bienvenidaCompleta"></h1>
@@ -302,15 +438,12 @@
     </select>
 
     <label>Tipo de reunión evaluada</label>
-    <select name="tipoReunion" required>
-      <option value="">Seleccione una opción</option>
-      <option value="Intermedia - Equipo Administrativo">
-        Intermedia (Equipo Administrativo)
-      </option>
-      <option value="Semanal - Contratistas y Obra">
-        Semanal (Contratistas / Directores / Residentes)
-      </option>
+    <select name="tipoReunion" id="tipoReunionSelect" required disabled>
+      <option value="" id="tipoReunionSeleccionadaOption"></option>
     </select>
+
+    <label>Asistencia calculada</label>
+    <input type="text" name="asistenciaCalculada" id="asistenciaCalculadaInput" readonly style="width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #d2d2d7; background-color: #f5f5f7; font-size: 15px;">
 
     <label>Nivel de cumplimiento Lean observado</label>
     <select name="nivelMadurez" required>
@@ -327,7 +460,7 @@
     <button type="submit" style="margin-top:30px;">Guardar auditoría</button>
   </form>
 
-  <button class="back-button" onclick="volverAProyectos()">← Volver a selección de proyecto</button>
+  <button class="back-button" onclick="volverAAsistencia()">← Volver a evaluación de asistencia</button>
   <div id="mensajeExito" class="success"></div>
 </div>
 
@@ -351,6 +484,9 @@
   let ProyectoSeleccionado = "";
   let NombreResponsable = "";
   let ProyectoTemporal = "";
+  let TipoReunionSeleccionado = "";
+  let AsistenciaCalculada = 0;
+  let ContratistasSemanal = []; // Para almacenar los contratistas en reunión semanal
 
   // Base de datos de proyectos con sucursal
   const proyectosConSucursal = [
@@ -376,6 +512,16 @@
     "Sucursal Bogotá": "Ing. Camilo Pulgarin - Sucursal Bogotá",
     "Sucursal Bucaramanga": "Ing. Paola Ramirez - Sucursal Bucaramanga",
     "Sucursal Costa": "Ing. Daniela Herrera - Sucursal Costa"
+  };
+
+  // Contratistas por proyecto (ejemplo - en producción esto vendría de BD)
+  const contratistasPorProyecto = {
+    "Scala": ["Contratista A", "Contratista B", "Contratista C"],
+    "Almeria": ["Contratista X", "Contratista Y"],
+    "Chamonix": ["Contratista 1", "Contratista 2", "Contratista 3"],
+    "Gallet": ["Contratista Alpha", "Contratista Beta"],
+    "Aquaris": ["Contratista Costa 1", "Contratista Costa 2"],
+    "Quarus": ["Contratista Quarus 1"]
   };
 
   // Ocultar splash inicial después de 1.5 segundos y mostrar splash principal
@@ -471,114 +617,281 @@
     
     ProyectoSeleccionado = ProyectoTemporal;
     
+    // Ir a pantalla de selección de tipo de reunión
     document.getElementById("proyectosScreen").classList.remove("active");
+    document.getElementById("tipoReunionScreen").classList.add("active");
+    
+    // Actualizar información en pantalla de tipo de reunión
+    document.getElementById("bienvenidaTipoReunion").innerText = `Bienvenido, ${NombreResponsable}`;
+    document.getElementById("infoProyectoTipoReunion").innerText = `Proyecto: ${ProyectoSeleccionado}`;
+  }
+
+  function seleccionarTipoReunion(tipoReunion) {
+    TipoReunionSeleccionado = tipoReunion;
+    
+    // Obtener contratistas para este proyecto si es reunión semanal
+    if (tipoReunion === "Semanal - Contratistas y Obra") {
+      ContratistasSemanal = contratistasPorProyecto[ProyectoSeleccionado] || [];
+    } else {
+      ContratistasSemanal = [];
+    }
+    
+    // Ir a pantalla de evaluación de asistencia
+    document.getElementById("tipoReunionScreen").classList.remove("active");
+    document.getElementById("asistenciaScreen").classList.add("active");
+    
+    // Configurar pantalla de asistencia según el tipo de reunión
+    configurarPantallaAsistencia();
+  }
+
+  function configurarPantallaAsistencia() {
+    const contenedor = document.getElementById("contenedorAsistencia");
+    const titulo = document.getElementById("tituloAsistencia");
+    const subtitulo = document.getElementById("subtituloAsistencia");
+    
+    titulo.innerText = `Evaluación de Asistencia`;
+    subtitulo.innerText = `Proyecto: ${ProyectoSeleccionado} | ${TipoReunionSeleccionado}`;
+    
+    if (TipoReunionSeleccionado === "Intermedia - Equipo Administrativo") {
+      configurarAsistenciaIntermedia(contenedor);
+    } else if (TipoReunionSeleccionado === "Semanal - Contratistas y Obra") {
+      configurarAsistenciaSemanal(contenedor);
+    }
+  }
+
+  function configurarAsistenciaIntermedia(contenedor) {
+    const participantes = [
+      { id: 'director', nombre: 'Director', peso: 25, asistio: false },
+      { id: 'residente1', nombre: 'Residente 1', peso: 5, asistio: false },
+      { id: 'residente2', nombre: 'Residente 2', peso: 5, asistio: false },
+      { id: 'residente3', nombre: 'Residente 3', peso: 5, asistio: false },
+      { id: 'residente4', nombre: 'Residente 4', peso: 5, asistio: false },
+      { id: 'residente5', nombre: 'Residente 5', peso: 5, asistio: false },
+      { id: 'fca', nombre: 'FCA', peso: 10, asistio: false },
+      { id: 'syst', nombre: 'SYST', peso: 10, asistio: false },
+      { id: 'logistico', nombre: 'Logístico', peso: 10, asistio: false },
+      { id: 'programador', nombre: 'Programador', peso: 20, asistio: false }
+    ];
+    
+    let html = `
+      <div class="tipo-reunion-info">
+        <h3>🏢 Reunión Intermedia - Equipo Administrativo</h3>
+        <p>Marque la asistencia de cada participante. Los pesos suman 100%.</p>
+      </div>
+    `;
+    
+    participantes.forEach(participante => {
+      html += `
+        <div class="participante-item">
+          <div class="participante-info">
+            <div class="participante-nombre">${participante.nombre}</div>
+            <div class="participante-peso">Peso: ${participante.peso}%</div>
+          </div>
+          <div class="asistencia-control">
+            <input type="checkbox" 
+                   class="asistencia-checkbox" 
+                   id="${participante.id}"
+                   data-peso="${participante.peso}"
+                   onchange="calcularAsistencia()">
+            <label for="${participante.id}">Asistió</label>
+          </div>
+        </div>
+      `;
+    });
+    
+    html += `
+      <div class="total-asistencia">
+        <div>Asistencia Total</div>
+        <div class="total-porcentaje" id="totalPorcentaje">0%</div>
+        <div id="notaAsistencia"></div>
+      </div>
+    `;
+    
+    contenedor.innerHTML = html;
+    // Inicializar cálculo
+    calcularAsistencia();
+  }
+
+  function configurarAsistenciaSemanal(contenedor) {
+    // Obtener contratistas del proyecto
+    const contratistas = ContratistasSemanal;
+    
+    let html = `
+      <div class="tipo-reunion-info">
+        <h3>📋 Reunión Semanal - Contratistas y Obra</h3>
+        <p>Validación especial: El Director debe verificar asistencia de todos los contratistas.</p>
+        <p class="nota-info">Nota: Si falta algún contratista, la nota del Director se reduce a la mitad.</p>
+      </div>
+      
+      <div class="participante-item" style="background-color: #fff3e0;">
+        <div class="participante-info">
+          <div class="participante-nombre">Director</div>
+          <div class="participante-peso">Peso: 30% (con validación de contratistas)</div>
+        </div>
+        <div class="asistencia-control">
+          <input type="checkbox" 
+                 class="asistencia-checkbox" 
+                 id="director"
+                 data-peso="30"
+                 data-validar-contratistas="true"
+                 onchange="calcularAsistencia()">
+          <label for="director">Asistió</label>
+        </div>
+      </div>
+    `;
+    
+    // Mostrar lista de contratistas si existen
+    if (contratistas.length > 0) {
+      html += `
+        <div class="contratistas-container">
+          <h4>Contratistas en el proyecto (${contratistas.length})</h4>
+          <p>El Director debe validar la asistencia de cada contratista:</p>
+      `;
+      
+      contratistas.forEach((contratista, index) => {
+        html += `
+          <div class="contratista-item">
+            <span>${contratista}</span>
+            <div>
+              <input type="checkbox" 
+                     class="contratista-checkbox" 
+                     id="contratista-${index}"
+                     onchange="validarContratistas()">
+              <label for="contratista-${index}">Presente</label>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `</div>`;
+    } else {
+      html += `
+        <div class="contratistas-container">
+          <p>No hay contratistas registrados para este proyecto.</p>
+          <p class="nota-info">Se asume que todos los contratistas están presentes.</p>
+        </div>
+      `;
+    }
+    
+    // Resto de participantes
+    const otrosParticipantes = [
+      { id: 'residentes', nombre: 'Residentes (todos)', peso: 30 },
+      { id: 'syst', nombre: 'SYST', peso: 20 },
+      { id: 'logistico', nombre: 'Logístico', peso: 20 }
+    ];
+    
+    otrosParticipantes.forEach(participante => {
+      html += `
+        <div class="participante-item">
+          <div class="participante-info">
+            <div class="participante-nombre">${participante.nombre}</div>
+            <div class="participante-peso">Peso: ${participante.peso}%</div>
+          </div>
+          <div class="asistencia-control">
+            <input type="checkbox" 
+                   class="asistencia-checkbox" 
+                   id="${participante.id}"
+                   data-peso="${participante.peso}"
+                   onchange="calcularAsistencia()">
+            <label for="${participante.id}">Asistió</label>
+          </div>
+        </div>
+      `;
+    });
+    
+    html += `
+      <div class="total-asistencia">
+        <div>Asistencia Total</div>
+        <div class="total-porcentaje" id="totalPorcentaje">0%</div>
+        <div id="notaAsistencia"></div>
+      </div>
+    `;
+    
+    contenedor.innerHTML = html;
+    // Inicializar cálculo
+    calcularAsistencia();
+  }
+
+  function calcularAsistencia() {
+    const checkboxes = document.querySelectorAll('.asistencia-checkbox');
+    let total = 0;
+    let directorCheckbox = null;
+    let todosContratistasPresentes = true;
+    
+    // Validar contratistas si es reunión semanal
+    if (TipoReunionSeleccionado === "Semanal - Contratistas y Obra") {
+      const contratistasCheckboxes = document.querySelectorAll('.contratista-checkbox');
+      directorCheckbox = document.getElementById('director');
+      
+      if (contratistasCheckboxes.length > 0) {
+        todosContratistasPresentes = true;
+        contratistasCheckboxes.forEach(cb => {
+          if (!cb.checked) {
+            todosContratistasPresentes = false;
+          }
+        });
+      }
+    }
+    
+    // Calcular total
+    checkboxes.forEach(checkbox => {
+      if (checkbox.checked) {
+        let peso = parseInt(checkbox.getAttribute('data-peso'));
+        
+        // Validación especial para director en reunión semanal
+        if (checkbox.id === 'director' && checkbox.getAttribute('data-validar-contratistas')) {
+          if (!todosContratistasPresentes) {
+            peso = peso / 2; // Reducir a la mitad si faltan contratistas
+          }
+        }
+        
+        total += peso;
+      }
+    });
+    
+    // Actualizar display
+    document.getElementById('totalPorcentaje').innerText = `${total}%`;
+    
+    let notaTexto = "";
+    if (TipoReunionSeleccionado === "Semanal - Contratistas y Obra" && directorCheckbox && directorCheckbox.checked) {
+      if (!todosContratistasPresentes) {
+        notaTexto = "⚠️ Nota: Director con peso reducido (faltan contratistas)";
+      } else {
+        notaTexto = "✓ Todos los contratistas presentes";
+      }
+    }
+    document.getElementById('notaAsistencia').innerHTML = notaTexto;
+    
+    // Guardar asistencia calculada y habilitar botón de continuar
+    AsistenciaCalculada = total;
+    document.getElementById('btnContinuarAsistencia').disabled = total === 0;
+    
+    return total;
+  }
+
+  function validarContratistas() {
+    // Recalcular cuando cambia la asistencia de contratistas
+    calcularAsistencia();
+  }
+
+  function continuarAFormulario() {
+    document.getElementById("asistenciaScreen").classList.remove("active");
     document.getElementById("formularioScreen").classList.add("active");
     
     // Actualizar información en el formulario
     document.getElementById("bienvenidaCompleta").innerText = `Bienvenido, ${NombreResponsable}`;
-    document.getElementById("infoProyecto").innerText = `Proyecto: ${ProyectoSeleccionado}`;
+    document.getElementById("infoProyecto").innerText = `Proyecto: ${ProyectoSeleccionado} | ${TipoReunionSeleccionado}`;
     
-    // Establecer el proyecto seleccionado en el select
+    // Establecer valores pre-seleccionados
     const proyectoOption = document.getElementById("proyectoSeleccionadoOption");
     proyectoOption.value = ProyectoSeleccionado;
     proyectoOption.textContent = ProyectoSeleccionado;
     document.getElementById("proyectoSelect").value = ProyectoSeleccionado;
-  }
-
-  function filtrarProyectos() {
-    const busqueda = document.getElementById("buscadorProyectos").value.toLowerCase();
-    const proyectosPermitidos = proyectosPorSucursal[SucursalSeleccionada];
     
-    // Filtrar proyectos por los permitidos para esta sucursal
-    const proyectosAFiltrar = proyectosConSucursal.filter(proyecto => 
-      proyectosPermitidos.includes(proyecto.nombre)
-    );
+    const tipoReunionOption = document.getElementById("tipoReunionSeleccionadaOption");
+    tipoReunionOption.value = TipoReunionSeleccionado;
+    tipoReunionOption.textContent = TipoReunionSeleccionado;
+    document.getElementById("tipoReunionSelect").value = TipoReunionSeleccionado;
     
-    // Filtrar por búsqueda
-    const proyectosFiltrados = proyectosAFiltrar.filter(proyecto => 
-      proyecto.nombre.toLowerCase().includes(busqueda)
-    );
-    
-    // Obtener todas las tarjetas actuales
-    const todasLasTarjetas = document.querySelectorAll('.project-card');
-    
-    if (busqueda === "") {
-      // Si no hay búsqueda, mostrar todas las tarjetas
-      todasLasTarjetas.forEach(card => {
-        card.classList.remove('hidden');
-      });
-    } else {
-      // Si hay búsqueda, ocultar las que no coinciden
-      todasLasTarjetas.forEach(card => {
-        const nombreProyecto = card.getAttribute("data-proyecto").toLowerCase();
-        if (nombreProyecto.includes(busqueda)) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
-      });
-    }
-    
-    // Mostrar mensaje si no hay resultados
-    const noResults = document.querySelector('.no-results');
-    if (proyectosFiltrados.length === 0 && busqueda !== "") {
-      if (!noResults) {
-        const listaProyectos = document.getElementById("listaProyectos");
-        const mensaje = document.createElement("div");
-        mensaje.className = "no-results";
-        mensaje.textContent = "No se encontraron proyectos que coincidan con la búsqueda";
-        listaProyectos.appendChild(mensaje);
-      }
-    } else if (noResults) {
-      noResults.remove();
-    }
-  }
-
-  function volverAResponsables() {
-    document.getElementById("proyectosScreen").classList.remove("active");
-    document.getElementById("responsables").classList.add("active");
-  }
-
-  function volverAProyectos() {
-    document.getElementById("formularioScreen").classList.remove("active");
-    document.getElementById("proyectosScreen").classList.add("active");
-  }
-
-  document.getElementById("formAuditoria").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const proyecto = this.proyecto.value;
-    const tipoReunion = this.tipoReunion.value;
-    const nivelMadurez = this.nivelMadurez.value;
-    const observaciones = this.observaciones.value || "";
-
-    db.collection("auditoriasLean").add({
-      ResponsableRegistro: ResponsableRegistro,
-      Sucursal: SucursalSeleccionada,
-      Proyecto: proyecto,
-      TipoReunion: tipoReunion,
-      NivelMadurez: nivelMadurez,
-      Observaciones: observaciones,
-      FechaRegistro: new Date()
-    })
-    .then(() => {
-      document.getElementById("mensajeExito").innerText = "Auditoría registrada correctamente.";
-      
-      // Limpiar formulario pero mantener proyecto seleccionado
-      this.tipoReunion.value = "";
-      this.nivelMadurez.value = "";
-      this.observaciones.value = "";
-      
-      // Ocultar mensaje después de 3 segundos
-      setTimeout(() => {
-        document.getElementById("mensajeExito").innerText = "";
-      }, 3000);
-    })
-    .catch(error => {
-      alert("Error al guardar: " + error);
-    });
-  });
-</script>
-
-</body>
-</html>
+    // Mostrar asistencia calculada
+    document.getElementById("as
