@@ -9,6 +9,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
   <style>
+    /* ESTILOS BÁSICOS */
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -78,6 +79,13 @@
       margin-bottom: 40px;
     }
 
+    h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 30px 0 20px 0;
+      color: #1d1d1f;
+    }
+
     button {
       background-color: #0071e3;
       color: white;
@@ -103,33 +111,6 @@
       background-color: #d1d1d6;
     }
 
-    form {
-      max-width: 600px;
-      margin: auto;
-      text-align: left;
-    }
-
-    label {
-      font-weight: 500;
-      display: block;
-      margin-top: 20px;
-    }
-
-    select {
-      width: 100%;
-      padding: 12px;
-      margin-top: 8px;
-      border-radius: 8px;
-      border: 1px solid #d2d2d7;
-      font-size: 15px;
-    }
-
-    .success {
-      color: #0071e3;
-      font-size: 18px;
-      margin-top: 20px;
-    }
-
     .back-button {
       background-color: #e5e5ea;
       color: #000;
@@ -140,7 +121,7 @@
       background-color: #d1d1d6;
     }
 
-    /* ESTILOS PARA LA BÚSQUEDA DE PROYECTOS */
+    /* ESTILOS PARA SELECCIÓN DE PROYECTOS */
     .search-container {
       max-width: 600px;
       margin: 0 auto 30px auto;
@@ -155,13 +136,6 @@
       box-sizing: border-box;
     }
 
-    .search-input:focus {
-      outline: none;
-      border-color: #0071e3;
-      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
-    }
-
-    /* ESTILOS PARA LAS TARJETAS DE PROYECTOS */
     .projects-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -191,10 +165,6 @@
       border-color: #005bb5;
     }
 
-    .project-card.hidden {
-      display: none;
-    }
-
     .project-name {
       font-size: 20px;
       font-weight: 600;
@@ -216,20 +186,7 @@
       color: white;
     }
 
-    .no-results {
-      grid-column: 1 / -1;
-      padding: 40px;
-      color: #666;
-      font-size: 18px;
-    }
-
-    .select-button {
-      margin-top: 20px;
-      width: auto;
-      min-width: 200px;
-    }
-
-    /* NUEVOS ESTILOS PARA EVALUACIÓN DE ASISTENCIA */
+    /* ESTILOS PARA ASISTENCIA */
     .asistencia-container {
       max-width: 800px;
       margin: 0 auto;
@@ -297,6 +254,17 @@
       margin: 10px 0;
     }
 
+    /* ESTILOS ADICIONALES PARA ASISTENCIA */
+    .btn-asistencia.selected {
+      color: white !important;
+      font-weight: bold;
+    }
+    
+    .btn-residentes.selected {
+      color: white !important;
+      font-weight: bold;
+    }
+    
     .contratistas-container {
       margin-top: 20px;
       padding: 15px;
@@ -304,7 +272,7 @@
       border-radius: 8px;
       border: 1px solid #ffd54f;
     }
-
+    
     .contratista-item {
       display: flex;
       justify-content: space-between;
@@ -312,30 +280,343 @@
       padding: 10px 0;
       border-bottom: 1px solid #e0e0e0;
     }
-
+    
     .contratista-item:last-child {
       border-bottom: none;
     }
-
+    
     .nota-info {
       font-size: 14px;
       color: #666;
       margin-top: 10px;
       font-style: italic;
     }
+
+    /* ESTILOS PARA PREGUNTAS */
+    .preguntas-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .header-info {
+      background-color: #f0f8ff;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      border-left: 4px solid #0071e3;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .info-item {
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e5e5ea;
+    }
+
+    .info-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .pregunta-card {
+      background-color: #f9f9f9;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 25px;
+      border: 1px solid #e5e5ea;
+    }
+
+    .pregunta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #e5e5ea;
+    }
+
+    .pregunta-numero {
+      background-color: #0071e3;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .pregunta-detalle {
+      flex: 1;
+      margin-left: 20px;
+    }
+
+    .pregunta-texto {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .pregunta-meta {
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .meta-label {
+      font-weight: 600;
+      margin-right: 5px;
+    }
+
+    .escala-container {
+      margin: 25px 0;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      border: 1px solid #e5e5ea;
+    }
+
+    .escala-header {
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #1d1d1f;
+      font-size: 16px;
+    }
+
+    .escala-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .escala-opcion {
+      padding: 15px 10px;
+      border-radius: 8px;
+      border: 2px solid #e5e5ea;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .escala-opcion:hover {
+      border-color: #0071e3;
+      background-color: #f0f8ff;
+    }
+
+    .escala-opcion.selected {
+      border-color: #0071e3;
+      background-color: #0071e3;
+      color: white;
+    }
+
+    .escala-numero {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .escala-descripcion {
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
+    .areas-container {
+      margin-top: 25px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      border: 1px solid #e5e5ea;
+    }
+
+    .areas-header {
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #1d1d1f;
+      font-size: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .areas-subtitle {
+      font-size: 14px;
+      color: #666;
+      font-weight: normal;
+    }
+
+    .areas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .area-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      background-color: #f5f5f7;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .area-item:hover {
+      background-color: #e8e8ed;
+    }
+
+    .area-item.selected {
+      background-color: #d1e7ff;
+      border: 2px solid #0071e3;
+    }
+
+    .area-checkbox {
+      margin-right: 10px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .navegacion-preguntas {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e5ea;
+    }
+
+    .contador-preguntas {
+      font-weight: 600;
+      color: #666;
+    }
+
+    .botones-navegacion {
+      display: flex;
+      gap: 10px;
+    }
+
+    .progreso-container {
+      margin: 30px 0;
+    }
+
+    .barra-progreso {
+      width: 100%;
+      height: 8px;
+      background-color: #e5e5ea;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progreso-llenado {
+      height: 100%;
+      background-color: #0071e3;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .texto-progreso {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* ESTILOS PARA FORMULARIO FINAL */
+    form {
+      max-width: 600px;
+      margin: auto;
+      text-align: left;
+    }
+
+    label {
+      font-weight: 500;
+      display: block;
+      margin-top: 20px;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #d2d2d7;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    .success {
+      color: #0071e3;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    .resumen-container {
+      background-color: #f9f9f9;
+      padding: 25px;
+      border-radius: 12px;
+      margin: 30px 0;
+      border: 1px solid #e5e5ea;
+    }
+
+    .resumen-pregunta {
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: white;
+      border-radius: 8px;
+      border-left: 4px solid #0071e3;
+    }
+
+    .resumen-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .resumen-calificacion {
+      background-color: #0071e3;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .select-button {
+      margin-top: 20px;
+      width: auto;
+      min-width: 200px;
+    }
   </style>
 </head>
 
 <body>
 
-<!-- SPLASH INICIAL (Nuevo) -->
+<!-- SPLASH INICIAL -->
 <div id="splashInicial">
   <h1>Madurez Lean Construction</h1>
   <div class="empresa">MARVAL S.A.</div>
   <div class="version">Formulario Lean Versión 1.2</div>
 </div>
 
-<!-- SPLASH (Original) -->
+<!-- SPLASH PRINCIPAL -->
 <div id="splash" class="screen">
   <h1>Auditoría Lean Construction</h1>
   <h2>Evaluación del nivel de madurez en obra</h2>
@@ -345,106 +626,107 @@
 <!-- SELECCIÓN RESPONSABLE -->
 <div id="responsables" class="screen">
   <h1>Seleccione el responsable</h1>
-
-  <button onclick="seleccionarResponsable('Dirección Nacional')">
-    Dirección Nacional
-  </button>
-
-  <button onclick="seleccionarResponsable('Sucursal Bogotá')">
-    Sucursal Bogotá
-  </button>
-
-  <button onclick="seleccionarResponsable('Sucursal Bucaramanga')">
-    Sucursal Bucaramanga
-  </button>
-
-  <button onclick="seleccionarResponsable('Sucursal Costa')">
-    Sucursal Costa
-  </button>
+  <button onclick="seleccionarResponsable('Dirección Nacional')">Dirección Nacional</button>
+  <button onclick="seleccionarResponsable('Sucursal Bogotá')">Sucursal Bogotá</button>
+  <button onclick="seleccionarResponsable('Sucursal Bucaramanga')">Sucursal Bucaramanga</button>
+  <button onclick="seleccionarResponsable('Sucursal Costa')">Sucursal Costa</button>
 </div>
 
 <!-- SELECCIÓN DE PROYECTO -->
 <div id="proyectosScreen" class="screen">
   <h1 id="bienvenidaResponsable"></h1>
   <h2>Seleccione el proyecto a auditar</h2>
-  
   <div class="search-container">
-    <input type="text" 
-           id="buscadorProyectos" 
-           class="search-input" 
-           placeholder="🔍 Buscar proyecto por nombre..."
-           onkeyup="filtrarProyectos()">
+    <input type="text" id="buscadorProyectos" class="search-input" placeholder="🔍 Buscar proyecto por nombre..." onkeyup="filtrarProyectos()">
   </div>
-  
   <div class="projects-grid" id="listaProyectos"></div>
-  
   <div id="proyectoSeleccionadoContainer" style="display: none;">
     <button class="select-button" onclick="confirmarProyecto()">Seleccionar Proyecto</button>
   </div>
-  
   <button class="back-button" onclick="volverAResponsables()">← Volver a selección de responsable</button>
 </div>
 
-<!-- NUEVA PANTALLA: SELECCIÓN DE TIPO DE REUNIÓN -->
+<!-- SELECCIÓN DE TIPO DE REUNIÓN -->
 <div id="tipoReunionScreen" class="screen">
   <h1 id="bienvenidaTipoReunion"></h1>
   <h2 id="infoProyectoTipoReunion"></h2>
-
   <div class="tipo-reunion-info">
     <h3>Seleccione el tipo de reunión a auditar</h3>
     <p>Esta selección determinará el sistema de evaluación de asistencia</p>
   </div>
-
   <div style="max-width: 400px; margin: 40px auto;">
     <button style="width: 100%; margin-bottom: 20px; padding: 20px; font-size: 18px;" onclick="seleccionarTipoReunion('Intermedia - Equipo Administrativo')">
       📊 Reunión Intermedia<br>
       <small>Equipo Administrativo</small>
     </button>
-
     <button style="width: 100%; padding: 20px; font-size: 18px;" onclick="seleccionarTipoReunion('Semanal - Contratistas y Obra')">
       📋 Reunión Semanal<br>
       <small>Contratistas / Directores / Residentes</small>
     </button>
   </div>
-
   <button class="back-button" onclick="volverAProyectosDesdeTipoReunion()">← Volver a selección de proyecto</button>
 </div>
 
-<!-- NUEVA PANTALLA: EVALUACIÓN DE ASISTENCIA -->
+<!-- EVALUACIÓN DE ASISTENCIA -->
 <div id="asistenciaScreen" class="screen">
   <h1 id="tituloAsistencia"></h1>
   <h2 id="subtituloAsistencia"></h2>
-
-  <div class="asistencia-container" id="contenedorAsistencia">
-    <!-- El contenido se genera dinámicamente según el tipo de reunión -->
-  </div>
-
-  <button id="btnContinuarAsistencia" style="margin-top: 30px;" onclick="continuarAFormulario()" disabled>
-    Continuar al formulario principal
-  </button>
-  
+  <div class="asistencia-container" id="contenedorAsistencia"></div>
+  <button id="btnContinuarAsistencia" style="margin-top: 30px;" onclick="continuarAFormulario()" disabled>Continuar a evaluación de preguntas</button>
   <button class="back-button" onclick="volverATipoReunion()">← Volver a selección de tipo de reunión</button>
 </div>
 
-<!-- FORMULARIO COMPLETO -->
+<!-- EVALUACIÓN DE PREGUNTAS -->
+<div id="preguntasScreen" class="screen">
+  <h1>Evaluación Lean Construction</h1>
+  <div class="header-info">
+    <h3>Información del proceso</h3>
+    <div class="info-grid">
+      <div class="info-item"><div class="info-label">Responsable</div><div class="info-value" id="infoResponsable"></div></div>
+      <div class="info-item"><div class="info-label">Proyecto</div><div class="info-value" id="infoProyectoPreguntas"></div></div>
+      <div class="info-item"><div class="info-label">Tipo de Reunión</div><div class="info-value" id="infoTipoReunion"></div></div>
+      <div class="info-item"><div class="info-label">Asistencia Calculada</div><div class="info-value" id="infoAsistencia">0%</div></div>
+    </div>
+  </div>
+  <div class="progreso-container">
+    <div class="barra-progreso"><div class="progreso-llenado" id="barraProgreso" style="width: 0%"></div></div>
+    <div class="texto-progreso">Pregunta <span id="preguntaActual">1</span> de <span id="totalPreguntas">10</span></div>
+  </div>
+  <div class="preguntas-container" id="contenedorPreguntas"></div>
+  <div class="navegacion-preguntas">
+    <div class="contador-preguntas">Pregunta <span id="contadorActual">1</span>/<span id="contadorTotal">10</span></div>
+    <div class="botones-navegacion">
+      <button class="secondary" id="btnAnterior" onclick="preguntaAnterior()" disabled>← Anterior</button>
+      <button id="btnSiguiente" onclick="preguntaSiguiente()">Siguiente →</button>
+      <button id="btnFinalizar" onclick="finalizarEvaluacion()" style="display: none;">Finalizar Evaluación</button>
+    </div>
+  </div>
+  <button class="back-button" onclick="volverAAsistenciaDesdePreguntas()">← Volver a evaluación de asistencia</button>
+</div>
+
+<!-- FORMULARIO FINAL -->
 <div id="formularioScreen" class="screen">
   <h1 id="bienvenidaCompleta"></h1>
   <h2 id="infoProyecto"></h2>
-
+  <div class="resumen-container">
+    <h3>📋 Resumen de la Evaluación</h3>
+    <div id="resumenEvaluacion"></div>
+    <div class="info-item" style="margin-top: 20px;">
+      <div class="info-label">Asistencia Total Calculada</div>
+      <div class="info-value" id="resumenAsistencia">0%</div>
+    </div>
+  </div>
   <form id="formAuditoria">
     <label>Proyecto seleccionado</label>
     <select name="proyecto" id="proyectoSelect" required disabled>
       <option value="" id="proyectoSeleccionadoOption"></option>
     </select>
-
     <label>Tipo de reunión evaluada</label>
     <select name="tipoReunion" id="tipoReunionSelect" required disabled>
       <option value="" id="tipoReunionSeleccionadaOption"></option>
     </select>
-
-    <label>Asistencia calculada</label>
-    <input type="text" name="asistenciaCalculada" id="asistenciaCalculadaInput" readonly style="width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #d2d2d7; background-color: #f5f5f7; font-size: 15px;">
-
+    <input type="hidden" name="asistenciaCalculada" id="asistenciaCalculadaInput">
+    <input type="hidden" name="evaluacionCompleta" id="evaluacionCompletaInput">
     <label>Nivel de cumplimiento Lean observado</label>
     <select name="nivelMadurez" required>
       <option value="">Seleccione una opción</option>
@@ -453,14 +735,11 @@
       <option value="Estandarizado">Estandarizado</option>
       <option value="Optimizado">Optimizado</option>
     </select>
-
     <label>Observaciones adicionales (opcional)</label>
-    <textarea name="observaciones" rows="3" placeholder="Agregue observaciones relevantes sobre la auditoría" style="width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #d2d2d7; font-size: 15px; font-family: inherit;"></textarea>
-
-    <button type="submit" style="margin-top:30px;">Guardar auditoría</button>
+    <textarea name="observaciones" rows="3" placeholder="Agregue observaciones relevantes sobre la auditoría"></textarea>
+    <button type="submit" style="margin-top:30px;">Guardar auditoría completa</button>
   </form>
-
-  <button class="back-button" onclick="volverAAsistencia()">← Volver a evaluación de asistencia</button>
+  <button class="back-button" onclick="volverAPreguntas()">← Volver a evaluación de preguntas</button>
   <div id="mensajeExito" class="success"></div>
 </div>
 
@@ -486,9 +765,16 @@
   let ProyectoTemporal = "";
   let TipoReunionSeleccionado = "";
   let AsistenciaCalculada = 0;
-  let ContratistasSemanal = []; // Para almacenar los contratistas en reunión semanal
+  let ContratistasSemanal = [];
+  let PreguntasEvaluacion = [];
+  let RespuestasUsuario = [];
+  let PreguntaActual = 0;
+  
+  // Estados de asistencia
+  let estadosAsistencia = {};
+  let residentesEstado = null;
 
-  // Base de datos de proyectos con sucursal
+  // Base de datos de proyectos
   const proyectosConSucursal = [
     { nombre: "Scala", sucursal: "Bogotá" },
     { nombre: "Almeria", sucursal: "Bogotá" },
@@ -514,7 +800,7 @@
     "Sucursal Costa": "Ing. Daniela Herrera - Sucursal Costa"
   };
 
-  // Contratistas por proyecto (ejemplo - en producción esto vendría de BD)
+  // Contratistas por proyecto
   const contratistasPorProyecto = {
     "Scala": ["Contratista A", "Contratista B", "Contratista C"],
     "Almeria": ["Contratista X", "Contratista Y"],
@@ -524,12 +810,41 @@
     "Quarus": ["Contratista Quarus 1"]
   };
 
-  // Ocultar splash inicial después de 1.5 segundos y mostrar splash principal
+  // Base de datos de preguntas
+  const PreguntasLean = [
+    { id: 1, elemento: "Planificación", tipo: "Corto Plazo", detalle: "¿Existe un plan de trabajo semanal detallado?", areas: ["Obra", "Planeación", "Dirección"] },
+    { id: 2, elemento: "Ejecución", tipo: "Seguimiento", detalle: "¿Se realizan reuniones diarias de coordinación?", areas: ["Obra", "Residentes", "Contratistas"] },
+    { id: 3, elemento: "Control", tipo: "Métricas", detalle: "¿Se monitorean indicadores clave de desempeño?", areas: ["Control", "Planeación", "Dirección"] },
+    { id: 4, elemento: "Mejora Continua", tipo: "Retroalimentación", detalle: "¿Se documentan lecciones aprendidas?", areas: ["Calidad", "Seguridad", "Todos"] },
+    { id: 5, elemento: "Colaboración", tipo: "Comunicación", detalle: "¿Existe comunicación fluida entre áreas?", areas: ["Comunicación", "Todos"] },
+    { id: 6, elemento: "Estandarización", tipo: "Procesos", detalle: "¿Se utilizan métodos estandarizados?", areas: ["Calidad", "Obra", "Procesos"] },
+    { id: 7, elemento: "Gestión Visual", tipo: "Tableros", detalle: "¿Se emplean tableros visuales?", areas: ["Obra", "Planeación", "Control"] },
+    { id: 8, elemento: "Reducción de Desperdicios", tipo: "Materiales", detalle: "¿Se minimiza el desperdicio de materiales?", areas: ["Logística", "Compras", "Obra"] },
+    { id: 9, elemento: "Seguridad", tipo: "Prevención", detalle: "¿Se realizan inspecciones de seguridad?", areas: ["Seguridad", "Obra", "Contratistas"] },
+    { id: 10, elemento: "Entrenamiento", tipo: "Capacitación", detalle: "¿El personal recibe capacitación Lean?", areas: ["RRHH", "Dirección", "Todos"] }
+  ];
+
+  // Escala de evaluación
+  const EscalaEvaluacion = [
+    { nivel: 1, descripcion: "No existe", detalle: "No hay evidencia" },
+    { nivel: 2, descripcion: "Inicial", detalle: "Implementación básica" },
+    { nivel: 3, descripcion: "En desarrollo", detalle: "Implementación parcial" },
+    { nivel: 4, descripcion: "Estandarizado", detalle: "Implementación completa" },
+    { nivel: 5, descripcion: "Optimizado", detalle: "Mejora continua" }
+  ];
+
+  // Áreas disponibles
+  const AreasDisponibles = ["Obra", "Planeación", "Control", "Calidad", "Seguridad", "Logística", "Compras", "RRHH", "Finanzas", "Contratistas", "Residentes", "Dirección", "Comunicación", "Procesos", "Todos"];
+
+  // Ocultar splash inicial después de 1.5 segundos
   setTimeout(function() {
     document.getElementById("splashInicial").style.display = "none";
     document.getElementById("splash").classList.add("active");
   }, 1500);
 
+  // ============================================
+  // FUNCIONES DE NAVEGACIÓN PRINCIPAL
+  // ============================================
   function mostrarResponsables() {
     document.getElementById("splash").classList.remove("active");
     document.getElementById("responsables").classList.add("active");
@@ -543,31 +858,23 @@
     document.getElementById("responsables").classList.remove("active");
     document.getElementById("proyectosScreen").classList.add("active");
     
-    // Mostrar mensaje de bienvenida
     document.getElementById("bienvenidaResponsable").innerText = `Bienvenido, ${NombreResponsable}`;
-    
-    // Limpiar búsqueda y proyecto temporal
     document.getElementById("buscadorProyectos").value = "";
     ProyectoTemporal = "";
     document.getElementById("proyectoSeleccionadoContainer").style.display = "none";
     
-    // Mostrar proyectos según sucursal
     mostrarProyectos(sucursal);
   }
 
   function mostrarProyectos(sucursal) {
     const listaProyectos = document.getElementById("listaProyectos");
     const proyectosPermitidos = proyectosPorSucursal[sucursal];
-    
-    // Filtrar proyectos por los permitidos para esta sucursal
-    const proyectosAFiltrar = proyectosConSucursal.filter(proyecto => 
-      proyectosPermitidos.includes(proyecto.nombre)
-    );
+    const proyectosAFiltrar = proyectosConSucursal.filter(proyecto => proyectosPermitidos.includes(proyecto.nombre));
     
     listaProyectos.innerHTML = "";
     
     if (proyectosAFiltrar.length === 0) {
-      listaProyectos.innerHTML = '<div class="no-results">No hay proyectos disponibles para esta sucursal</div>';
+      listaProyectos.innerHTML = '<div style="grid-column:1/-1; padding:40px; color:#666; font-size:18px;">No hay proyectos disponibles</div>';
       return;
     }
     
@@ -575,37 +882,20 @@
       const card = document.createElement("div");
       card.className = "project-card";
       card.setAttribute("data-proyecto", proyecto.nombre);
-      
       card.innerHTML = `
         <div class="project-name">${proyecto.nombre}</div>
         <div class="project-sucursal">Sucursal: ${proyecto.sucursal}</div>
       `;
-      
-      card.onclick = function() {
-        seleccionarProyectoCard(proyecto.nombre);
-      };
-      
+      card.onclick = function() { seleccionarProyectoCard(proyecto.nombre); };
       listaProyectos.appendChild(card);
     });
   }
 
   function seleccionarProyectoCard(proyecto) {
-    // Deseleccionar todas las tarjetas
-    const todasLasTarjetas = document.querySelectorAll('.project-card');
-    todasLasTarjetas.forEach(card => {
-      card.classList.remove('selected');
-    });
-    
-    // Seleccionar la tarjeta clickeada
+    document.querySelectorAll('.project-card').forEach(card => card.classList.remove('selected'));
     const tarjetaSeleccionada = document.querySelector(`[data-proyecto="${proyecto}"]`);
-    if (tarjetaSeleccionada) {
-      tarjetaSeleccionada.classList.add('selected');
-    }
-    
-    // Guardar proyecto temporalmente
+    if (tarjetaSeleccionada) tarjetaSeleccionada.classList.add('selected');
     ProyectoTemporal = proyecto;
-    
-    // Mostrar botón de seleccionar
     document.getElementById("proyectoSeleccionadoContainer").style.display = "block";
   }
 
@@ -616,282 +906,717 @@
     }
     
     ProyectoSeleccionado = ProyectoTemporal;
-    
-    // Ir a pantalla de selección de tipo de reunión
     document.getElementById("proyectosScreen").classList.remove("active");
     document.getElementById("tipoReunionScreen").classList.add("active");
-    
-    // Actualizar información en pantalla de tipo de reunión
     document.getElementById("bienvenidaTipoReunion").innerText = `Bienvenido, ${NombreResponsable}`;
     document.getElementById("infoProyectoTipoReunion").innerText = `Proyecto: ${ProyectoSeleccionado}`;
   }
 
+  function volverAResponsables() {
+    document.getElementById("proyectosScreen").classList.remove("active");
+    document.getElementById("responsables").classList.add("active");
+  }
+
+  function volverAProyectosDesdeTipoReunion() {
+    document.getElementById("tipoReunionScreen").classList.remove("active");
+    document.getElementById("proyectosScreen").classList.add("active");
+  }
+
+  // ============================================
+  // FUNCIONES DE TIPO DE REUNIÓN
+  // ============================================
   function seleccionarTipoReunion(tipoReunion) {
     TipoReunionSeleccionado = tipoReunion;
     
-    // Obtener contratistas para este proyecto si es reunión semanal
+    // Resetear estados de asistencia
+    estadosAsistencia = {};
+    residentesEstado = null;
+    
     if (tipoReunion === "Semanal - Contratistas y Obra") {
       ContratistasSemanal = contratistasPorProyecto[ProyectoSeleccionado] || [];
     } else {
       ContratistasSemanal = [];
     }
     
-    // Ir a pantalla de evaluación de asistencia
     document.getElementById("tipoReunionScreen").classList.remove("active");
     document.getElementById("asistenciaScreen").classList.add("active");
-    
-    // Configurar pantalla de asistencia según el tipo de reunión
     configurarPantallaAsistencia();
   }
 
+  function volverATipoReunion() {
+    document.getElementById("asistenciaScreen").classList.remove("active");
+    document.getElementById("tipoReunionScreen").classList.add("active");
+  }
+
+  // ============================================
+  // FUNCIONES DE ASISTENCIA (CON BOTÓN NA)
+  // ============================================
   function configurarPantallaAsistencia() {
     const contenedor = document.getElementById("contenedorAsistencia");
-    const titulo = document.getElementById("tituloAsistencia");
-    const subtitulo = document.getElementById("subtituloAsistencia");
-    
-    titulo.innerText = `Evaluación de Asistencia`;
-    subtitulo.innerText = `Proyecto: ${ProyectoSeleccionado} | ${TipoReunionSeleccionado}`;
+    document.getElementById("tituloAsistencia").innerText = `Evaluación de Asistencia`;
+    document.getElementById("subtituloAsistencia").innerText = `Proyecto: ${ProyectoSeleccionado} | ${TipoReunionSeleccionado}`;
     
     if (TipoReunionSeleccionado === "Intermedia - Equipo Administrativo") {
       configurarAsistenciaIntermedia(contenedor);
-    } else if (TipoReunionSeleccionado === "Semanal - Contratistas y Obra") {
+    } else {
       configurarAsistenciaSemanal(contenedor);
     }
   }
 
   function configurarAsistenciaIntermedia(contenedor) {
     const participantes = [
-      { id: 'director', nombre: 'Director', peso: 25, asistio: false },
-      { id: 'residente1', nombre: 'Residente 1', peso: 5, asistio: false },
-      { id: 'residente2', nombre: 'Residente 2', peso: 5, asistio: false },
-      { id: 'residente3', nombre: 'Residente 3', peso: 5, asistio: false },
-      { id: 'residente4', nombre: 'Residente 4', peso: 5, asistio: false },
-      { id: 'residente5', nombre: 'Residente 5', peso: 5, asistio: false },
-      { id: 'fca', nombre: 'FCA', peso: 10, asistio: false },
-      { id: 'syst', nombre: 'SYST', peso: 10, asistio: false },
-      { id: 'logistico', nombre: 'Logístico', peso: 10, asistio: false },
-      { id: 'programador', nombre: 'Programador', peso: 20, asistio: false }
+      { id: 'director', nombre: 'Director', peso: 25, asistio: null },
+      { id: 'residente1', nombre: 'Residente 1', peso: 5, asistio: null },
+      { id: 'residente2', nombre: 'Residente 2', peso: 5, asistio: null },
+      { id: 'residente3', nombre: 'Residente 3', peso: 5, asistio: null },
+      { id: 'residente4', nombre: 'Residente 4', peso: 5, asistio: null },
+      { id: 'residente5', nombre: 'Residente 5', peso: 5, asistio: null },
+      { id: 'fca', nombre: 'FCA', peso: 10, asistio: null },
+      { id: 'syst', nombre: 'SYST', peso: 10, asistio: null },
+      { id: 'logistico', nombre: 'Logístico', peso: 10, asistio: null },
+      { id: 'programador', nombre: 'Programador', peso: 20, asistio: null }
     ];
     
     let html = `
-      <div class="tipo-reunion-info">
-        <h3>🏢 Reunión Intermedia - Equipo Administrativo</h3>
-        <p>Marque la asistencia de cada participante. Los pesos suman 100%.</p>
-      </div>
+        <div class="tipo-reunion-info">
+            <h3>🏢 Reunión Intermedia - Equipo Administrativo</h3>
+            <p>Marque la asistencia de cada participante. Use "No Aplica" para residentes que no existen en este proyecto.</p>
+            <p><strong>Pesos:</strong> Director (25%), Residentes (25% total), FCA (10%), SYST (10%), Logístico (10%), Programador (20%)</p>
+        </div>
     `;
     
     participantes.forEach(participante => {
-      html += `
-        <div class="participante-item">
-          <div class="participante-info">
-            <div class="participante-nombre">${participante.nombre}</div>
-            <div class="participante-peso">Peso: ${participante.peso}%</div>
-          </div>
-          <div class="asistencia-control">
-            <input type="checkbox" 
-                   class="asistencia-checkbox" 
-                   id="${participante.id}"
-                   data-peso="${participante.peso}"
-                   onchange="calcularAsistencia()">
-            <label for="${participante.id}">Asistió</label>
-          </div>
-        </div>
-      `;
+        const esResidente = participante.id.includes('residente');
+        
+        html += `
+            <div class="participante-item" id="item-${participante.id}">
+                <div class="participante-info">
+                    <div class="participante-nombre">${participante.nombre}</div>
+                    <div class="participante-peso">Peso: ${participante.peso}%</div>
+                </div>
+                <div class="asistencia-control">
+                    ${esResidente ? `
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-asistencia ${estadosAsistencia[participante.id] === true ? 'selected' : ''}" 
+                                    onclick="marcarAsistencia('${participante.id}', true)" 
+                                    style="padding: 8px 12px; background-color: ${estadosAsistencia[participante.id] === true ? '#34c759' : '#e5e5ea'}; border-radius: 6px; border: none; cursor: pointer;">
+                                ✅ Asistió
+                            </button>
+                            <button class="btn-asistencia ${estadosAsistencia[participante.id] === false ? 'selected' : ''}" 
+                                    onclick="marcarAsistencia('${participante.id}', false)" 
+                                    style="padding: 8px 12px; background-color: ${estadosAsistencia[participante.id] === false ? '#ff3b30' : '#e5e5ea'}; border-radius: 6px; border: none; cursor: pointer;">
+                                ❌ No asistió
+                            </button>
+                            <button class="btn-asistencia ${estadosAsistencia[participante.id] === 'na' ? 'selected' : ''}" 
+                                    onclick="marcarAsistencia('${participante.id}', 'na')" 
+                                    style="padding: 8px 12px; background-color: ${estadosAsistencia[participante.id] === 'na' ? '#8e8e93' : '#e5e5ea'}; border-radius: 6px; border: none; cursor: pointer;">
+                                NA / No aplica
+                            </button>
+                        </div>
+                    ` : `
+                        <input type="checkbox" 
+                               class="asistencia-checkbox" 
+                               id="${participante.id}"
+                               data-peso="${participante.peso}"
+                               onchange="calcularAsistencia()">
+                        <label for="${participante.id}">Asistió</label>
+                    `}
+                </div>
+            </div>
+        `;
     });
     
     html += `
-      <div class="total-asistencia">
-        <div>Asistencia Total</div>
-        <div class="total-porcentaje" id="totalPorcentaje">0%</div>
-        <div id="notaAsistencia"></div>
-      </div>
+        <div class="total-asistencia">
+            <div>Asistencia Total</div>
+            <div class="total-porcentaje" id="totalPorcentaje">0%</div>
+            <div id="detalleCalculo" style="font-size: 14px; margin-top: 10px;"></div>
+            <div id="notaAsistencia"></div>
+        </div>
     `;
     
     contenedor.innerHTML = html;
-    // Inicializar cálculo
     calcularAsistencia();
   }
 
   function configurarAsistenciaSemanal(contenedor) {
-    // Obtener contratistas del proyecto
     const contratistas = ContratistasSemanal;
     
     let html = `
-      <div class="tipo-reunion-info">
-        <h3>📋 Reunión Semanal - Contratistas y Obra</h3>
-        <p>Validación especial: El Director debe verificar asistencia de todos los contratistas.</p>
-        <p class="nota-info">Nota: Si falta algún contratista, la nota del Director se reduce a la mitad.</p>
-      </div>
-      
-      <div class="participante-item" style="background-color: #fff3e0;">
-        <div class="participante-info">
-          <div class="participante-nombre">Director</div>
-          <div class="participante-peso">Peso: 30% (con validación de contratistas)</div>
+        <div class="tipo-reunion-info">
+            <h3>📋 Reunión Semanal - Contratistas y Obra</h3>
+            <p>Validación especial: El Director debe verificar asistencia de todos los contratistas.</p>
+            <p><strong>Pesos:</strong> Director (30%), Residentes (30%), SYST (20%), Logístico (20%)</p>
+            <p class="nota-info">Nota: Si falta algún contratista, la nota del Director se reduce a la mitad.</p>
         </div>
-        <div class="asistencia-control">
-          <input type="checkbox" 
-                 class="asistencia-checkbox" 
-                 id="director"
-                 data-peso="30"
-                 data-validar-contratistas="true"
-                 onchange="calcularAsistencia()">
-          <label for="director">Asistió</label>
+    `;
+    
+    // Director con validación de contratistas
+    html += `
+        <div class="participante-item" style="background-color: #fff3e0;">
+            <div class="participante-info">
+                <div class="participante-nombre">Director</div>
+                <div class="participante-peso">Peso: 30% (con validación de contratistas)</div>
+            </div>
+            <div class="asistencia-control">
+                <input type="checkbox" 
+                       class="asistencia-checkbox" 
+                       id="director"
+                       data-peso="30"
+                       data-validar-contratistas="true"
+                       onchange="calcularAsistencia()">
+                <label for="director">Asistió</label>
+            </div>
         </div>
-      </div>
     `;
     
     // Mostrar lista de contratistas si existen
     if (contratistas.length > 0) {
-      html += `
-        <div class="contratistas-container">
-          <h4>Contratistas en el proyecto (${contratistas.length})</h4>
-          <p>El Director debe validar la asistencia de cada contratista:</p>
-      `;
-      
-      contratistas.forEach((contratista, index) => {
         html += `
-          <div class="contratista-item">
-            <span>${contratista}</span>
-            <div>
-              <input type="checkbox" 
-                     class="contratista-checkbox" 
-                     id="contratista-${index}"
-                     onchange="validarContratistas()">
-              <label for="contratista-${index}">Presente</label>
-            </div>
-          </div>
+            <div class="contratistas-container">
+                <h4>Contratistas en el proyecto (${contratistas.length})</h4>
+                <p>El Director debe validar la asistencia de cada contratista:</p>
         `;
-      });
-      
-      html += `</div>`;
+        
+        contratistas.forEach((contratista, index) => {
+            html += `
+                <div class="contratista-item">
+                    <span>${contratista}</span>
+                    <div>
+                        <input type="checkbox" 
+                               class="contratista-checkbox" 
+                               id="contratista-${index}"
+                               onchange="validarContratistas()">
+                        <label for="contratista-${index}">Presente</label>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `</div>`;
     } else {
-      html += `
-        <div class="contratistas-container">
-          <p>No hay contratistas registrados para este proyecto.</p>
-          <p class="nota-info">Se asume que todos los contratistas están presentes.</p>
-        </div>
-      `;
+        html += `
+            <div class="contratistas-container">
+                <p>No hay contratistas registrados para este proyecto.</p>
+                <p class="nota-info">Se asume que todos los contratistas están presentes.</p>
+            </div>
+        `;
     }
     
-    // Resto de participantes
+    // RESIDENTES CON OPCIONES: Asistió / No asistió / NA
+    html += `
+        <div class="participante-item">
+            <div class="participante-info">
+                <div class="participante-nombre">Residentes (todos)</div>
+                <div class="participante-peso">Peso: 30%</div>
+            </div>
+            <div class="asistencia-control">
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-residentes" id="btn-residentes-si" onclick="marcarResidentesSemanal(true)" 
+                            style="padding: 8px 12px; background-color: ${residentesEstado === true ? '#34c759' : '#e5e5ea'}; border-radius: 6px; border: none; cursor: pointer;">
+                        ✅ Asistieron
+                    </button>
+                    <button class="btn-residentes" id="btn-residentes-no" onclick="marcarResidentesSemanal(false)" 
+                            style="padding: 8px 12px; background-color: ${residentesEstado === false ? '#ff3b30' : '#e5e5ea'}; border-radius: 6px; border: none; cursor: pointer;">
+                        ❌ No asistieron
+                    </button>
+                    <button class="btn-residentes" id="btn-residentes-na" onclick="marcarResidentesSemanal('na')" 
+                            style="padding: 8px 12px; background-color: ${residentesEstado === 'na' ? '#8e8e93' : '#e5e5ea'}; border-radius: 6px; border: none; cursor: pointer;">
+                        NA / No aplica
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Otros participantes (SYST y Logístico)
     const otrosParticipantes = [
-      { id: 'residentes', nombre: 'Residentes (todos)', peso: 30 },
-      { id: 'syst', nombre: 'SYST', peso: 20 },
-      { id: 'logistico', nombre: 'Logístico', peso: 20 }
+        { id: 'syst', nombre: 'SYST', peso: 20 },
+        { id: 'logistico', nombre: 'Logístico', peso: 20 }
     ];
     
     otrosParticipantes.forEach(participante => {
-      html += `
-        <div class="participante-item">
-          <div class="participante-info">
-            <div class="participante-nombre">${participante.nombre}</div>
-            <div class="participante-peso">Peso: ${participante.peso}%</div>
-          </div>
-          <div class="asistencia-control">
-            <input type="checkbox" 
-                   class="asistencia-checkbox" 
-                   id="${participante.id}"
-                   data-peso="${participante.peso}"
-                   onchange="calcularAsistencia()">
-            <label for="${participante.id}">Asistió</label>
-          </div>
-        </div>
-      `;
+        html += `
+            <div class="participante-item">
+                <div class="participante-info">
+                    <div class="participante-nombre">${participante.nombre}</div>
+                    <div class="participante-peso">Peso: ${participante.peso}%</div>
+                </div>
+                <div class="asistencia-control">
+                    <input type="checkbox" 
+                           class="asistencia-checkbox" 
+                           id="${participante.id}"
+                           data-peso="${participante.peso}"
+                           onchange="calcularAsistencia()">
+                    <label for="${participante.id}">Asistió</label>
+                </div>
+            </div>
+        `;
     });
     
     html += `
-      <div class="total-asistencia">
-        <div>Asistencia Total</div>
-        <div class="total-porcentaje" id="totalPorcentaje">0%</div>
-        <div id="notaAsistencia"></div>
-      </div>
+        <div class="total-asistencia">
+            <div>Asistencia Total</div>
+            <div class="total-porcentaje" id="totalPorcentaje">0%</div>
+            <div id="detalleCalculo" style="font-size: 14px; margin-top: 10px;"></div>
+            <div id="notaAsistencia"></div>
+        </div>
     `;
     
     contenedor.innerHTML = html;
-    // Inicializar cálculo
+    calcularAsistencia();
+  }
+
+  function marcarAsistencia(id, estado) {
+    const item = document.getElementById(`item-${id}`);
+    const botones = item.querySelectorAll('.btn-asistencia');
+    
+    // Remover todas las selecciones
+    botones.forEach(boton => {
+        boton.style.backgroundColor = '#e5e5ea';
+        boton.classList.remove('selected');
+    });
+    
+    // Seleccionar el botón clickeado
+    const botonClickeado = Array.from(botones).find(boton => 
+        boton.textContent.includes(estado === true ? 'Asistió' : 
+                                  estado === false ? 'No asistió' : 'No aplica')
+    );
+    
+    if (botonClickeado) {
+        if (estado === true) {
+            botonClickeado.style.backgroundColor = '#34c759'; // Verde
+        } else if (estado === false) {
+            botonClickeado.style.backgroundColor = '#ff3b30'; // Rojo
+        } else if (estado === 'na') {
+            botonClickeado.style.backgroundColor = '#8e8e93'; // Gris
+        }
+        botonClickeado.classList.add('selected');
+    }
+    
+    // Guardar estado
+    estadosAsistencia[id] = estado;
+    
+    // Recalcular asistencia
+    calcularAsistencia();
+  }
+
+  function marcarResidentesSemanal(estado) {
+    // Actualizar estado global
+    residentesEstado = estado;
+    
+    // Actualizar colores de botones
+    const btnSi = document.getElementById('btn-residentes-si');
+    const btnNo = document.getElementById('btn-residentes-no');
+    const btnNa = document.getElementById('btn-residentes-na');
+    
+    // Resetear todos
+    [btnSi, btnNo, btnNa].forEach(btn => {
+        btn.style.backgroundColor = '#e5e5ea';
+        btn.classList.remove('selected');
+    });
+    
+    // Colorear el seleccionado
+    if (estado === true) {
+        btnSi.style.backgroundColor = '#34c759';
+        btnSi.classList.add('selected');
+    } else if (estado === false) {
+        btnNo.style.backgroundColor = '#ff3b30';
+        btnNo.classList.add('selected');
+    } else if (estado === 'na') {
+        btnNa.style.backgroundColor = '#8e8e93';
+        btnNa.classList.add('selected');
+    }
+    
+    // Recalcular
+    calcularAsistencia();
+  }
+
+  function validarContratistas() {
     calcularAsistencia();
   }
 
   function calcularAsistencia() {
-    const checkboxes = document.querySelectorAll('.asistencia-checkbox');
-    let total = 0;
-    let directorCheckbox = null;
-    let todosContratistasPresentes = true;
+    let totalPuntos = 0;
+    let totalPesoDisponible = 0;
+    let detalle = "";
     
-    // Validar contratistas si es reunión semanal
-    if (TipoReunionSeleccionado === "Semanal - Contratistas y Obra") {
-      const contratistasCheckboxes = document.querySelectorAll('.contratista-checkbox');
-      directorCheckbox = document.getElementById('director');
-      
-      if (contratistasCheckboxes.length > 0) {
-        todosContratistasPresentes = true;
-        contratistasCheckboxes.forEach(cb => {
-          if (!cb.checked) {
-            todosContratistasPresentes = false;
-          }
-        });
-      }
-    }
-    
-    // Calcular total
-    checkboxes.forEach(checkbox => {
-      if (checkbox.checked) {
-        let peso = parseInt(checkbox.getAttribute('data-peso'));
+    if (TipoReunionSeleccionado === "Intermedia - Equipo Administrativo") {
+        // PESOS FIJOS para no residentes
+        const pesosFijos = {
+            'director': 25,
+            'fca': 10,
+            'syst': 10,
+            'logistico': 10,
+            'programador': 20
+        };
         
-        // Validación especial para director en reunión semanal
-        if (checkbox.id === 'director' && checkbox.getAttribute('data-validar-contratistas')) {
-          if (!todosContratistasPresentes) {
-            peso = peso / 2; // Reducir a la mitad si faltan contratistas
-          }
+        // Calcular residentes
+        let pesoResidentesDisponible = 0;
+        let puntosResidentes = 0;
+        let residentesContados = 0;
+        let residentesNA = 0;
+        
+        // Sumar pesos de residentes que NO son NA
+        for (let i = 1; i <= 5; i++) {
+            const id = `residente${i}`;
+            const estado = estadosAsistencia[id];
+            
+            if (estado !== 'na') {
+                pesoResidentesDisponible += 5; // Cada residente vale 5%
+                residentesContados++;
+                if (estado === true) {
+                    puntosResidentes += 5;
+                }
+            } else {
+                residentesNA++;
+            }
         }
         
-        total += peso;
-      }
-    });
+        // Sumar puntos fijos
+        Object.keys(pesosFijos).forEach(id => {
+            const checkbox = document.getElementById(id);
+            if (checkbox && checkbox.checked) {
+                totalPuntos += pesosFijos[id];
+            }
+            totalPesoDisponible += pesosFijos[id];
+        });
+        
+        // Agregar residentes
+        totalPuntos += puntosResidentes;
+        totalPesoDisponible += pesoResidentesDisponible;
+        
+        detalle = `Director (25%) + Otros (40%) + Residentes: ${pesoResidentesDisponible}% (${puntosResidentes}% obtenido)`;
+        if (residentesNA > 0) {
+            detalle += `<br><small>${residentesNA} residente(s) marcado(s) como NA</small>`;
+        }
+        
+    } else if (TipoReunionSeleccionado === "Semanal - Contratistas y Obra") {
+        // Director
+        const directorCheckbox = document.getElementById('director');
+        let pesoDirector = 0;
+        let directorAplica = true;
+        
+        if (directorCheckbox && directorCheckbox.checked) {
+            // Verificar contratistas
+            const contratistasCheckboxes = document.querySelectorAll('.contratista-checkbox');
+            let todosContratistasPresentes = true;
+            
+            if (contratistasCheckboxes.length > 0) {
+                contratistasCheckboxes.forEach(cb => {
+                    if (!cb.checked) todosContratistasPresentes = false;
+                });
+            }
+            
+            pesoDirector = todosContratistasPresentes ? 30 : 15; // 30% completo o 15% si faltan contratistas
+            totalPuntos += pesoDirector;
+        }
+        totalPesoDisponible += 30;
+        
+        // Residentes
+        let pesoResidentes = 0;
+        if (residentesEstado === true) {
+            pesoResidentes = 30;
+            totalPuntos += 30;
+            totalPesoDisponible += 30;
+        } else if (residentesEstado === false) {
+            totalPesoDisponible += 30; // Aplica pero no asistieron
+        } else if (residentesEstado === 'na') {
+            // No se suma al peso disponible (excluido del cálculo)
+            // totalPesoDisponible no se incrementa
+        }
+        
+        // SYST y Logístico
+        const otros = ['syst', 'logistico'];
+        otros.forEach(id => {
+            const checkbox = document.getElementById(id);
+            if (checkbox && checkbox.checked) {
+                totalPuntos += 20;
+            }
+            totalPesoDisponible += 20;
+        });
+        
+        detalle = `Director: ${pesoDirector}% | Residentes: ${residentesEstado === 'na' ? 'NA (excluido)' : pesoResidentes + '%'} | SYST+Logístico: 40%`;
+    }
+    
+    // Calcular porcentaje (evitar división por cero)
+    const porcentaje = totalPesoDisponible > 0 ? Math.round((totalPuntos / totalPesoDisponible) * 100) : 0;
     
     // Actualizar display
-    document.getElementById('totalPorcentaje').innerText = `${total}%`;
+    document.getElementById('totalPorcentaje').innerText = `${porcentaje}%`;
+    document.getElementById('detalleCalculo').innerHTML = `<small>${detalle}</small>`;
     
     let notaTexto = "";
-    if (TipoReunionSeleccionado === "Semanal - Contratistas y Obra" && directorCheckbox && directorCheckbox.checked) {
-      if (!todosContratistasPresentes) {
-        notaTexto = "⚠️ Nota: Director con peso reducido (faltan contratistas)";
-      } else {
-        notaTexto = "✓ Todos los contratistas presentes";
-      }
+    if (TipoReunionSeleccionado === "Semanal - Contratistas y Obra") {
+        const directorCheckbox = document.getElementById('director');
+        if (directorCheckbox && directorCheckbox.checked) {
+            const contratistasCheckboxes = document.querySelectorAll('.contratista-checkbox');
+            let todosPresentes = true;
+            contratistasCheckboxes.forEach(cb => { if (!cb.checked) todosPresentes = false; });
+            
+            if (contratistasCheckboxes.length > 0 && !todosPresentes) {
+                notaTexto = "⚠️ Nota: Director con peso reducido (faltan contratistas)";
+            } else if (contratistasCheckboxes.length > 0) {
+                notaTexto = "✓ Todos los contratistas presentes";
+            }
+        }
     }
     document.getElementById('notaAsistencia').innerHTML = notaTexto;
     
     // Guardar asistencia calculada y habilitar botón de continuar
-    AsistenciaCalculada = total;
-    document.getElementById('btnContinuarAsistencia').disabled = total === 0;
+    AsistenciaCalculada = porcentaje;
+    document.getElementById('btnContinuarAsistencia').disabled = porcentaje === 0;
     
-    return total;
-  }
-
-  function validarContratistas() {
-    // Recalcular cuando cambia la asistencia de contratistas
-    calcularAsistencia();
+    return porcentaje;
   }
 
   function continuarAFormulario() {
     document.getElementById("asistenciaScreen").classList.remove("active");
-    document.getElementById("formularioScreen").classList.add("active");
+    document.getElementById("preguntasScreen").classList.add("active");
+    iniciarEvaluacionPreguntas();
+  }
+
+  function volverAAsistenciaDesdePreguntas() {
+    document.getElementById("preguntasScreen").classList.remove("active");
+    document.getElementById("asistenciaScreen").classList.add("active");
+  }
+
+  // ============================================
+  // FUNCIONES DE EVALUACIÓN DE PREGUNTAS
+  // ============================================
+  function iniciarEvaluacionPreguntas() {
+    document.getElementById("infoResponsable").innerText = NombreResponsable;
+    document.getElementById("infoProyectoPreguntas").innerText = ProyectoSeleccionado;
+    document.getElementById("infoTipoReunion").innerText = TipoReunionSeleccionado;
+    document.getElementById("infoAsistencia").innerText = `${AsistenciaCalculada}%`;
     
-    // Actualizar información en el formulario
+    PreguntasEvaluacion = PreguntasLean;
+    RespuestasUsuario = new Array(PreguntasEvaluacion.length).fill(null);
+    PreguntaActual = 0;
+    
+    document.getElementById("totalPreguntas").innerText = PreguntasEvaluacion.length;
+    document.getElementById("contadorTotal").innerText = PreguntasEvaluacion.length;
+    
+    mostrarPreguntaActual();
+  }
+
+  function mostrarPreguntaActual() {
+    const contenedor = document.getElementById("contenedorPreguntas");
+    const pregunta = PreguntasEvaluacion[PreguntaActual];
+    const respuestaActual = RespuestasUsuario[PreguntaActual];
+    
+    let html = `
+      <div class="pregunta-card">
+        <div class="pregunta-header">
+          <div class="pregunta-numero">${PreguntaActual + 1}</div>
+          <div class="pregunta-detalle">
+            <div class="pregunta-texto">${pregunta.detalle}</div>
+            <div class="pregunta-meta">
+              <div><span class="meta-label">Elemento:</span> ${pregunta.elemento}</div>
+              <div><span class="meta-label">Tipo:</span> ${pregunta.tipo}</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="escala-container">
+          <div class="escala-header">Califique el nivel de implementación (1 = bajo, 5 = alto):</div>
+          <div class="escala-grid">
+    `;
+    
+    EscalaEvaluacion.forEach(nivel => {
+      const seleccionado = respuestaActual && respuestaActual.calificacion === nivel.nivel;
+      html += `
+        <div class="escala-opcion ${seleccionado ? 'selected' : ''}" onclick="seleccionarCalificacion(${nivel.nivel})" data-nivel="${nivel.nivel}">
+          <div class="escala-numero">${nivel.nivel}</div>
+          <div class="escala-descripcion">${nivel.descripcion}</div>
+        </div>
+      `;
+    });
+    
+    html += `</div></div><div class="areas-container"><div class="areas-header"><span>Áreas relacionadas</span><span class="areas-subtitle">Seleccione todas las que apliquen</span></div><div class="areas-grid">`;
+    
+    AreasDisponibles.forEach(area => {
+      const seleccionada = respuestaActual && respuestaActual.areas && respuestaActual.areas.includes(area);
+      html += `
+        <div class="area-item ${seleccionada ? 'selected' : ''}" onclick="toggleArea('${area}')">
+          <input type="checkbox" class="area-checkbox" id="area-${PreguntaActual}-${area}" ${seleccionada ? 'checked' : ''} style="display:none;">
+          <div class="area-label">${area}</div>
+        </div>
+      `;
+    });
+    
+    html += `</div></div></div>`;
+    
+    contenedor.innerHTML = html;
+    actualizarNavegacion();
+  }
+
+  function seleccionarCalificacion(nivel) {
+    document.querySelectorAll('.escala-opcion').forEach(opcion => opcion.classList.remove('selected'));
+    document.querySelector(`[data-nivel="${nivel}"]`).classList.add('selected');
+    
+    if (!RespuestasUsuario[PreguntaActual]) {
+      RespuestasUsuario[PreguntaActual] = { calificacion: nivel, areas: [] };
+    } else {
+      RespuestasUsuario[PreguntaActual].calificacion = nivel;
+    }
+  }
+
+  function toggleArea(area) {
+    const areaItem = event.target.closest('.area-item');
+    const checkbox = areaItem.querySelector('.area-checkbox');
+    areaItem.classList.toggle('selected');
+    checkbox.checked = !checkbox.checked;
+    
+    if (!RespuestasUsuario[PreguntaActual]) {
+      RespuestasUsuario[PreguntaActual] = { calificacion: null, areas: [] };
+    }
+    
+    if (checkbox.checked) {
+      if (!RespuestasUsuario[PreguntaActual].areas.includes(area)) {
+        RespuestasUsuario[PreguntaActual].areas.push(area);
+      }
+    } else {
+      const index = RespuestasUsuario[PreguntaActual].areas.indexOf(area);
+      if (index > -1) RespuestasUsuario[PreguntaActual].areas.splice(index, 1);
+    }
+  }
+
+  function actualizarNavegacion() {
+    const total = PreguntasEvaluacion.length;
+    document.getElementById("preguntaActual").innerText = PreguntaActual + 1;
+    document.getElementById("contadorActual").innerText = PreguntaActual + 1;
+    document.getElementById("barraProgreso").style.width = `${((PreguntaActual + 1) / total) * 100}%`;
+    document.getElementById("btnAnterior").disabled = PreguntaActual === 0;
+    
+    if (PreguntaActual === total - 1) {
+      document.getElementById("btnSiguiente").style.display = 'none';
+      document.getElementById("btnFinalizar").style.display = 'inline-block';
+    } else {
+      document.getElementById("btnSiguiente").style.display = 'inline-block';
+      document.getElementById("btnFinalizar").style.display = 'none';
+    }
+  }
+
+  function preguntaAnterior() {
+    if (PreguntaActual > 0) {
+      PreguntaActual--;
+      mostrarPreguntaActual();
+    }
+  }
+
+  function preguntaSiguiente() {
+    if (!RespuestasUsuario[PreguntaActual] || !RespuestasUsuario[PreguntaActual].calificacion) {
+      alert("Por favor, seleccione una calificación para continuar.");
+      return;
+    }
+    
+    if (PreguntaActual < PreguntasEvaluacion.length - 1) {
+      PreguntaActual++;
+      mostrarPreguntaActual();
+    }
+  }
+
+  function finalizarEvaluacion() {
+    if (!RespuestasUsuario[PreguntaActual] || !RespuestasUsuario[PreguntaActual].calificacion) {
+      alert("Por favor, seleccione una calificación para la última pregunta.");
+      return;
+    }
+    
+    document.getElementById("preguntasScreen").classList.remove("active");
+    document.getElementById("formularioScreen").classList.add("active");
+    mostrarResumenEvaluacion();
+  }
+
+  function mostrarResumenEvaluacion() {
     document.getElementById("bienvenidaCompleta").innerText = `Bienvenido, ${NombreResponsable}`;
     document.getElementById("infoProyecto").innerText = `Proyecto: ${ProyectoSeleccionado} | ${TipoReunionSeleccionado}`;
     
-    // Establecer valores pre-seleccionados
-    const proyectoOption = document.getElementById("proyectoSeleccionadoOption");
-    proyectoOption.value = ProyectoSeleccionado;
-    proyectoOption.textContent = ProyectoSeleccionado;
+    document.getElementById("proyectoSeleccionadoOption").value = ProyectoSeleccionado;
+    document.getElementById("proyectoSeleccionadoOption").textContent = ProyectoSeleccionado;
     document.getElementById("proyectoSelect").value = ProyectoSeleccionado;
     
-    const tipoReunionOption = document.getElementById("tipoReunionSeleccionadaOption");
-    tipoReunionOption.value = TipoReunionSeleccionado;
-    tipoReunionOption.textContent = TipoReunionSeleccionado;
+    document.getElementById("tipoReunionSeleccionadaOption").value = TipoReunionSeleccionado;
+    document.getElementById("tipoReunionSeleccionadaOption").textContent = TipoReunionSeleccionado;
     document.getElementById("tipoReunionSelect").value = TipoReunionSeleccionado;
     
-    // Mostrar asistencia calculada
-    document.getElementById("as
+    document.getElementById("asistenciaCalculadaInput").value = AsistenciaCalculada;
+    document.getElementById("resumenAsistencia").innerText = `${AsistenciaCalculada}%`;
+    
+    let html = '';
+    PreguntasEvaluacion.forEach((p, i) => {
+      const r = RespuestasUsuario[i];
+      if (r) {
+        html += `
+          <div class="resumen-pregunta">
+            <div class="resumen-header">
+              <strong>${i + 1}. ${p.detalle}</strong>
+              <div class="resumen-calificacion">${r.calificacion}/5</div>
+            </div>
+            <div><small>Elemento: ${p.elemento} | Tipo: ${p.tipo}</small></div>
+            <div><small>Áreas: ${r.areas.join(', ') || 'Ninguna'}</small></div>
+          </div>
+        `;
+      }
+    });
+    
+    document.getElementById("resumenEvaluacion").innerHTML = html;
+    document.getElementById("evaluacionCompletaInput").value = JSON.stringify({
+      preguntas: PreguntasEvaluacion,
+      respuestas: RespuestasUsuario,
+      asistencia: AsistenciaCalculada,
+      estadosAsistencia: estadosAsistencia,
+      residentesEstado: residentesEstado
+    });
+  }
+
+  function volverAPreguntas() {
+    document.getElementById("formularioScreen").classList.remove("active");
+    document.getElementById("preguntasScreen").classList.add("active");
+  }
+
+  // ============================================
+  // SUBMIT DEL FORMULARIO
+  // ============================================
+  document.getElementById("formAuditoria").addEventListener("submit", function(e) {
+    e.preventDefault();
+    
+    const proyecto = this.proyecto.value;
+    const tipoReunion = this.tipoReunion.value;
+    const nivelMadurez = this.nivelMadurez.value;
+    const observaciones = this.observaciones.value || "";
+    const asistenciaCalculada = this.asistenciaCalculada.value;
+    const evaluacionCompleta = this.evaluacionCompleta.value;
+    
+    db.collection("auditoriasLean").add({
+      ResponsableRegistro: NombreResponsable,
+      Sucursal: SucursalSeleccionada,
+      Proyecto: proyecto,
+      TipoReunion: tipoReunion,
+      NivelMadurez: nivelMadurez,
+      Observaciones: observaciones,
+      AsistenciaCalculada: asistenciaCalculada,
+      EvaluacionCompleta: JSON.parse(evaluacionCompleta),
+      FechaRegistro: new Date()
+    })
+    .then(() => {
+      document.getElementById("mensajeExito").innerText = "Auditoría completa registrada correctamente.";
+      setTimeout(() => { document.getElementById("mensajeExito").innerText = ""; }, 3000);
+    })
+    .catch(error => { alert("Error al guardar: " + error); });
+  });
+
+  // ============================================
+  // FUNCIÓN DE BÚSQUEDA
+  // ============================================
+  function filtrarProyectos() {
+    const busqueda = document.getElementById("buscadorProyectos").value.toLowerCase();
+    document.querySelectorAll('.project-card').forEach(card => {
+      const nombre = card.getAttribute("data-proyecto").toLowerCase();
+      card.style.display = nombre.includes(busqueda) ? "block" : "none";
+    });
+  }
+</script>
+
+</body>
+</html>
