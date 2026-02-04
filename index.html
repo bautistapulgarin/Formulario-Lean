@@ -1,722 +1,1049 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Auditoría Lean Construction</title>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #ffffff;
-      color: #1d1d1f;
-      text-align: center;
-    }
-
-    /* SPLASH INICIAL */
-    #splashInicial {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(180deg, #0f4c75, #3282b8, #bbe1fa);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      z-index: 1000;
-    }
-
-    #splashInicial h1 {
-      font-size: 36px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    #splashInicial .empresa {
-      font-size: 24px;
-      font-weight: 400;
-      margin-bottom: 30px;
-      opacity: 0.9;
-    }
-
-    #splashInicial .version {
-      position: absolute;
-      bottom: 30px;
-      font-size: 14px;
-      opacity: 0.9;
-      color: rgba(255, 255, 255, 0.9);
-    }
-
-    .screen {
-      display: none;
-      min-height: 100vh;
-      padding: 60px 20px;
-      box-sizing: border-box;
-    }
-
-    .active {
-      display: block;
-    }
-
-    h1 {
-      font-size: 36px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    h2 {
-      font-size: 22px;
-      font-weight: 400;
-      color: #6e6e73;
-      margin-bottom: 40px;
-    }
-
-    button {
-      background-color: #0071e3;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 14px 24px;
-      font-size: 16px;
-      margin: 10px;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-
-    button:hover {
-      background-color: #005bb5;
-    }
-
-    button.secondary {
-      background-color: #34c759;
-    }
-
-    button.secondary:hover {
-      background-color: #2aa44f;
-    }
-
-    button.tertiary {
-      background-color: #ff9500;
-    }
-
-    button.tertiary:hover {
-      background-color: #e57c00;
-    }
-
-    button.complete-btn {
-      background-color: #34c759;
-      padding: 8px 16px;
-      font-size: 14px;
-    }
-
-    button.complete-btn:hover {
-      background-color: #2aa44f;
-    }
-
-    button.complete-btn.completed {
-      background-color: #8e8e93;
-      cursor: not-allowed;
-    }
-
-    form {
-      max-width: 600px;
-      margin: auto;
-      text-align: left;
-    }
-
-    label {
-      font-weight: 500;
-      display: block;
-      margin-top: 20px;
-    }
-
-    select, textarea, input {
-      width: 100%;
-      padding: 12px;
-      margin-top: 8px;
-      border-radius: 8px;
-      border: 1px solid #d2d2d7;
-      font-size: 15px;
-      box-sizing: border-box;
-    }
-
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-      font-family: inherit;
-    }
-
-    input {
-      font-family: inherit;
-    }
-
-    .success {
-      color: #0071e3;
-      font-size: 18px;
-      margin-top: 20px;
-    }
-
-    .activities-list, .notes-list {
-      max-width: 800px;
-      margin: 40px auto;
-      text-align: left;
-    }
-
-    .activity-item, .note-item {
-      background-color: #f5f5f7;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-left: 4px solid #0071e3;
-    }
-
-    .activity-item.completed {
-      border-left-color: #34c759;
-      background-color: #f0f9f0;
-    }
-
-    .note-item.observacion {
-      border-left-color: #0071e3;
-    }
-
-    .note-item.incidencia {
-      border-left-color: #ff3b30;
-      background-color: #fff0f0;
-    }
-
-    .note-item.propuesta {
-      border-left-color: #34c759;
-      background-color: #f0f9f0;
-    }
-
-    .activity-header, .note-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .activity-detail, .note-detail {
-      margin-bottom: 15px;
-      line-height: 1.5;
-    }
-
-    .activity-priority, .note-type {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .priority-low {
-      background-color: #34c759;
-      color: white;
-    }
-
-    .priority-medium {
-      background-color: #ff9500;
-      color: white;
-    }
-
-    .priority-high {
-      background-color: #ff3b30;
-      color: white;
-    }
-
-    .type-observacion {
-      background-color: #0071e3;
-      color: white;
-    }
-
-    .type-incidencia {
-      background-color: #ff3b30;
-      color: white;
-    }
-
-    .type-propuesta {
-      background-color: #34c759;
-      color: white;
-    }
-
-    .activity-status {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 500;
-      margin-left: 10px;
-    }
-
-    .status-open {
-      background-color: #0071e3;
-      color: white;
-    }
-
-    .status-completed {
-      background-color: #34c759;
-      color: white;
-    }
-
-    .activity-actions, .note-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 15px;
-    }
-
-    .back-button {
-      background-color: #8e8e93;
-      margin-top: 30px;
-    }
-
-    .back-button:hover {
-      background-color: #6e6e73;
-    }
-
-    .splash-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .splash-buttons {
-      margin-top: 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .splash-buttons button {
-      width: 300px;
-      max-width: 90%;
-    }
-
-    .project-name {
-      font-weight: 600;
-      font-size: 18px;
-      margin-bottom: 5px;
-      color: #1d1d1f;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Auditoría Lean Construction</title>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- SheetJS para leer Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            color: #1d1d1f;
+            text-align: center;
+        }
+        /* SPLASH INICIAL */
+        #splashInicial {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #0f4c75, #3282b8, #bbe1fa);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            z-index: 1000;
+        }
+        #splashInicial h1 {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        #splashInicial .empresa {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        #splashInicial .version {
+            position: absolute;
+            bottom: 30px;
+            font-size: 14px;
+            opacity: 0.9;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding: 60px 20px;
+            box-sizing: border-box;
+        }
+        .active {
+            display: block;
+        }
+        h1 {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 22px;
+            font-weight: 400;
+            color: #6e6e73;
+            margin-bottom: 40px;
+        }
+        button {
+            background-color: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 24px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        button:hover {
+            background-color: #005bb5;
+        }
+        button.secondary {
+            background-color: #34c759;
+        }
+        button.secondary:hover {
+            background-color: #2aa44f;
+        }
+        button.tertiary {
+            background-color: #ff9500;
+        }
+        button.tertiary:hover {
+            background-color: #e57c00;
+        }
+        button.quaternary {
+            background-color: #af52de;
+        }
+        button.quaternary:hover {
+            background-color: #8e43b3;
+        }
+        button.complete-btn {
+            background-color: #34c759;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        button.complete-btn:hover {
+            background-color: #2aa44f;
+        }
+        button.complete-btn.completed {
+            background-color: #8e8e93;
+            cursor: not-allowed;
+        }
+        form {
+            max-width: 600px;
+            margin: auto;
+            text-align: left;
+        }
+        label {
+            font-weight: 500;
+            display: block;
+            margin-top: 20px;
+        }
+        select, textarea, input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 8px;
+            border: 1px solid #d2d2d7;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        input {
+            font-family: inherit;
+        }
+        .success {
+            color: #0071e3;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .activities-list, .notes-list {
+            max-width: 800px;
+            margin: 40px auto;
+            text-align: left;
+        }
+        .activity-item, .note-item {
+            background-color: #f5f5f7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0071e3;
+        }
+        .activity-item.completed {
+            border-left-color: #34c759;
+            background-color: #f0f9f0;
+        }
+        .note-item.observacion {
+            border-left-color: #0071e3;
+        }
+        .note-item.incidencia {
+            border-left-color: #ff3b30;
+            background-color: #fff0f0;
+        }
+        .note-item.propuesta {
+            border-left-color: #34c759;
+            background-color: #f0f9f0;
+        }
+        .activity-header, .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .activity-detail, .note-detail {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        .activity-priority, .note-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .priority-low {
+            background-color: #34c759;
+            color: white;
+        }
+        .priority-medium {
+            background-color: #ff9500;
+            color: white;
+        }
+        .priority-high {
+            background-color: #ff3b30;
+            color: white;
+        }
+        .type-observacion {
+            background-color: #0071e3;
+            color: white;
+        }
+        .type-incidencia {
+            background-color: #ff3b30;
+            color: white;
+        }
+        .type-propuesta {
+            background-color: #34c759;
+            color: white;
+        }
+        .activity-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        .status-open {
+            background-color: #0071e3;
+            color: white;
+        }
+        .status-completed {
+            background-color: #34c759;
+            color: white;
+        }
+        .activity-actions, .note-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        .back-button {
+            background-color: #8e8e93;
+            margin-top: 30px;
+        }
+        .back-button:hover {
+            background-color: #6e6e73;
+        }
+        .splash-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .splash-buttons {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+        .splash-buttons button {
+            width: 300px;
+            max-width: 90%;
+        }
+        .project-name {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #1d1d1f;
+        }
+        
+        /* ESTILOS PARA EL NUEVO MÓDULO DE SELLOS */
+        #sellosCalidadScreen {
+            padding: 40px 20px;
+        }
+        
+        .sellos-controls {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .sellos-controls input {
+            width: 300px;
+            max-width: 100%;
+        }
+        
+        .sellos-info {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            padding: 20px;
+            background-color: #f5f5f7;
+            border-radius: 10px;
+            text-align: left;
+        }
+        
+        .sellos-container {
+            max-width: 100%;
+            overflow-x: auto;
+            margin: 0 auto;
+        }
+        
+        .sellos-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sellos-table th {
+            background-color: #0071e3;
+            color: white;
+            text-align: left;
+            padding: 12px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sellos-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .sellos-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .sellos-table tr:hover {
+            background-color: #f0f7ff;
+        }
+        
+        .sellos-table th, .sellos-table td {
+            white-space: nowrap;
+            min-width: 100px;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0071e3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+        
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .data-count {
+            background-color: #f0f7ff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 20px auto;
+            max-width: 800px;
+            border-left: 4px solid #0071e3;
+        }
+    </style>
 </head>
-
 <body>
-
-<!-- SPLASH INICIAL (El que pediste restaurar) -->
-<div id="splashInicial">
-  <h1>Auditoría Lean Construction</h1>
-  <div class="empresa">MARVAL S.A.</div>
-  <div class="version">Formulario Lean Versión 1.2</div>
-</div>
-
-<!-- SPLASH PRINCIPAL CON LAS OPCIONES -->
-<div id="splash" class="screen">
-  <div class="splash-container">
-    <div>
-      <h1>Auditoría Lean Construction</h1>
-      <h2>Evaluación del nivel de madurez en obra</h2>
+    <!-- SPLASH INICIAL (El que pediste restaurar) -->
+    <div id="splashInicial">
+        <h1>Auditoría Lean Construction</h1>
+        <div class="empresa">MARVAL S.A.</div>
+        <div class="version">Formulario Lean Versión 1.2</div>
     </div>
-    
-    <div class="splash-buttons">
-      <button onclick="mostrarResponsables()">Iniciar auditoría</button>
-      <button class="secondary" onclick="mostrarRegistroActividades()">Registro de actividades Lean</button>
-      <button class="tertiary" onclick="mostrarRegistroNovedades()">Registro de novedades</button>
+
+    <!-- SPLASH PRINCIPAL CON LAS OPCIONES -->
+    <div id="splash" class="screen">
+        <div class="splash-container">
+            <div>
+                <h1>Auditoría Lean Construction</h1>
+                <h2>Evaluación del nivel de madurez en obra</h2>
+            </div>
+            <div class="splash-buttons">
+                <button onclick="mostrarResponsables()">Iniciar auditoría</button>
+                <button class="secondary" onclick="mostrarRegistroActividades()">Registro de actividades Lean</button>
+                <button class="tertiary" onclick="mostrarRegistroNovedades()">Registro de novedades</button>
+                <button class="quaternary" onclick="mostrarSellosCalidad()">Integración Sellos de Calidad</button>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<!-- SELECCIÓN RESPONSABLE -->
-<div id="responsables" class="screen">
-  <h1>Seleccione el responsable</h1>
+    <!-- SELECCIÓN RESPONSABLE -->
+    <div id="responsables" class="screen">
+        <h1>Seleccione el responsable</h1>
+        <button onclick="seleccionarResponsable('Ing. Juan Romero - Dirección Nacional')">
+            Dirección Nacional
+        </button>
+        <button onclick="seleccionarResponsable('Ing. Camilo Pulgarin - Sucursal Bogotá')">
+            Sucursal Bogotá
+        </button>
+        <button onclick="seleccionarResponsable('Ing. Paola Ramirez - Sucursal Bucaramanga')">
+            Sucursal Bucaramanga
+        </button>
+        <button onclick="seleccionarResponsable('Ing. Daniela Herrera - Sucursal Costa')">
+            Sucursal Costa
+        </button>
+        <button class="back-button" onclick="volverAlInicioDesdeResponsables()">Volver al inicio</button>
+    </div>
 
-  <button onclick="seleccionarResponsable('Ing. Juan Romero - Dirección Nacional')">
-    Dirección Nacional
-  </button>
+    <!-- FORMULARIO AUDITORÍA -->
+    <div id="formularioScreen" class="screen">
+        <h1 id="bienvenida"></h1>
+        <form id="formAuditoria">
+            <label>Tipo de reunión evaluada</label>
+            <select name="tipoReunion" required>
+                <option value="">Seleccione una opción</option>
+                <option value="Intermedia - Equipo Administrativo">
+                    Intermedia (Equipo Administrativo)
+                </option>
+                <option value="Semanal - Contratistas y Obra">
+                    Semanal (Contratistas / Directores / Residentes)
+                </option>
+            </select>
+            <label>Nivel de cumplimiento Lean observado</label>
+            <select name="nivelMadurez" required>
+                <option value="">Seleccione una opción</option>
+                <option value="Inicial">Inicial</option>
+                <option value="En desarrollo">En desarrollo</option>
+                <option value="Estandarizado">Estandarizado</option>
+                <option value="Optimizado">Optimizado</option>
+            </select>
+            <button type="submit" style="margin-top:30px;">Guardar auditoría</button>
+        </form>
+        <div id="mensajeExito" class="success"></div>
+        <button class="back-button" onclick="volverAlInicioDesdeAuditoria()">Volver al inicio</button>
+    </div>
 
-  <button onclick="seleccionarResponsable('Ing. Camilo Pulgarin - Sucursal Bogotá')">
-    Sucursal Bogotá
-  </button>
+    <!-- REGISTRO DE ACTIVIDADES LEAN -->
+    <div id="registroActividadesScreen" class="screen">
+        <h1>Registro de Actividades Lean</h1>
+        <h2>Gestión de tareas del equipo Lean</h2>
+        <form id="formActividad">
+            <label>Detalle de la tarea</label>
+            <textarea name="detalle" placeholder="Describe la tarea a realizar..." required></textarea>
+            <label>Prioridad</label>
+            <select name="prioridad" required>
+                <option value="">Seleccione una opción</option>
+                <option value="Baja">Baja</option>
+                <option value="Media">Media</option>
+                <option value="Alta">Alta</option>
+            </select>
+            <button type="submit" style="margin-top:30px;">Registrar actividad</button>
+        </form>
+        <div id="mensajeActividadExito" class="success"></div>
+        <div class="activities-list" id="listaActividades">
+            <!-- Las actividades se cargarán aquí dinámicamente -->
+        </div>
+        <button class="back-button" onclick="volverAlInicio()">Volver al inicio</button>
+    </div>
 
-  <button onclick="seleccionarResponsable('Ing. Paola Ramirez - Sucursal Bucaramanga')">
-    Sucursal Bucaramanga
-  </button>
+    <!-- REGISTRO DE NOVEDADES -->
+    <div id="registroNovedadesScreen" class="screen">
+        <h1>Registro de Novedades</h1>
+        <h2>Notas de los auditores</h2>
+        <form id="formNovedad">
+            <label>Proyecto</label>
+            <input type="text" name="proyecto" placeholder="Nombre del proyecto" required>
+            <label>Tipo de nota</label>
+            <select name="tipo" required>
+                <option value="">Seleccione una opción</option>
+                <option value="Observación de obra">Observación de obra</option>
+                <option value="Incidencia">Incidencia</option>
+                <option value="Propuesta">Propuesta</option>
+            </select>
+            <label>Detalle</label>
+            <textarea name="detalle" placeholder="Describe la novedad en detalle..." required></textarea>
+            <button type="submit" style="margin-top:30px;">Registrar novedad</button>
+        </form>
+        <div id="mensajeNovedadExito" class="success"></div>
+        <div class="notes-list" id="listaNovedades">
+            <!-- Las novedades se cargarán aquí dinámicamente -->
+        </div>
+        <button class="back-button" onclick="volverAlInicioDesdeNovedades()">Volver al inicio</button>
+    </div>
 
-  <button onclick="seleccionarResponsable('Ing. Daniela Herrera - Sucursal Costa')">
-    Sucursal Costa
-  </button>
+    <!-- NUEVO MÓDULO: INTEGRACIÓN SELLOS DE CALIDAD -->
+    <div id="sellosCalidadScreen" class="screen">
+        <h1>Integración Sellos de Calidad</h1>
+        <h2>Visualización de datos de AnaliticaSellos.xlsx</h2>
+        
+        <div class="sellos-info">
+            <p><strong>Instrucciones:</strong> Esta sección carga y muestra el archivo Excel "AnaliticaSellos" desde GitHub. Se mostrarán automáticamente las primeras 100 columnas sin filtros aplicados.</p>
+            <p><strong>URL del archivo:</strong> <span id="fileUrl"></span></p>
+        </div>
+        
+        <div class="sellos-controls">
+            <input type="text" id="searchInput" placeholder="Buscar en los datos..." onkeyup="filtrarTabla()">
+            <button onclick="cargarExcelDesdeGitHub()">
+                <span id="loadingIndicator" style="display:none;" class="loading"></span>
+                Actualizar datos
+            </button>
+            <button onclick="descargarDatos()">Descargar como CSV</button>
+        </div>
+        
+        <div id="statusMessage"></div>
+        
+        <div class="data-count" id="dataCount">
+            Cargando datos...
+        </div>
+        
+        <div class="sellos-container">
+            <table class="sellos-table" id="sellosTable">
+                <thead id="tableHeader">
+                    <!-- Encabezados se cargarán dinámicamente -->
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Datos se cargarán dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        
+        <button class="back-button" onclick="volverAlInicioDesdeSellos()">Volver al inicio</button>
+    </div>
 
-  <button class="back-button" onclick="volverAlInicioDesdeResponsables()">Volver al inicio</button>
-</div>
-
-<!-- FORMULARIO AUDITORÍA -->
-<div id="formularioScreen" class="screen">
-  <h1 id="bienvenida"></h1>
-
-  <form id="formAuditoria">
-    <label>Tipo de reunión evaluada</label>
-    <select name="tipoReunion" required>
-      <option value="">Seleccione una opción</option>
-      <option value="Intermedia - Equipo Administrativo">
-        Intermedia (Equipo Administrativo)
-      </option>
-      <option value="Semanal - Contratistas y Obra">
-        Semanal (Contratistas / Directores / Residentes)
-      </option>
-    </select>
-
-    <label>Nivel de cumplimiento Lean observado</label>
-    <select name="nivelMadurez" required>
-      <option value="">Seleccione una opción</option>
-      <option value="Inicial">Inicial</option>
-      <option value="En desarrollo">En desarrollo</option>
-      <option value="Estandarizado">Estandarizado</option>
-      <option value="Optimizado">Optimizado</option>
-    </select>
-
-    <button type="submit" style="margin-top:30px;">Guardar auditoría</button>
-  </form>
-
-  <div id="mensajeExito" class="success"></div>
-
-  <button class="back-button" onclick="volverAlInicioDesdeAuditoria()">Volver al inicio</button>
-</div>
-
-<!-- REGISTRO DE ACTIVIDADES LEAN -->
-<div id="registroActividadesScreen" class="screen">
-  <h1>Registro de Actividades Lean</h1>
-  <h2>Gestión de tareas del equipo Lean</h2>
-
-  <form id="formActividad">
-    <label>Detalle de la tarea</label>
-    <textarea name="detalle" placeholder="Describe la tarea a realizar..." required></textarea>
-
-    <label>Prioridad</label>
-    <select name="prioridad" required>
-      <option value="">Seleccione una opción</option>
-      <option value="Baja">Baja</option>
-      <option value="Media">Media</option>
-      <option value="Alta">Alta</option>
-    </select>
-
-    <button type="submit" style="margin-top:30px;">Registrar actividad</button>
-  </form>
-
-  <div id="mensajeActividadExito" class="success"></div>
-
-  <div class="activities-list" id="listaActividades">
-    <!-- Las actividades se cargarán aquí dinámicamente -->
-  </div>
-
-  <button class="back-button" onclick="volverAlInicio()">Volver al inicio</button>
-</div>
-
-<!-- REGISTRO DE NOVEDADES -->
-<div id="registroNovedadesScreen" class="screen">
-  <h1>Registro de Novedades</h1>
-  <h2>Notas de los auditores</h2>
-
-  <form id="formNovedad">
-    <label>Proyecto</label>
-    <input type="text" name="proyecto" placeholder="Nombre del proyecto" required>
-
-    <label>Tipo de nota</label>
-    <select name="tipo" required>
-      <option value="">Seleccione una opción</option>
-      <option value="Observación de obra">Observación de obra</option>
-      <option value="Incidencia">Incidencia</option>
-      <option value="Propuesta">Propuesta</option>
-    </select>
-
-    <label>Detalle</label>
-    <textarea name="detalle" placeholder="Describe la novedad en detalle..." required></textarea>
-
-    <button type="submit" style="margin-top:30px;">Registrar novedad</button>
-  </form>
-
-  <div id="mensajeNovedadExito" class="success"></div>
-
-  <div class="notes-list" id="listaNovedades">
-    <!-- Las novedades se cargarán aquí dinámicamente -->
-  </div>
-
-  <button class="back-button" onclick="volverAlInicioDesdeNovedades()">Volver al inicio</button>
-</div>
-
-<script>
-  // Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyBlRbAQZVSWSZgNw8w4Iie7WsdSdogRX5o",
-    authDomain: "formularioobra.firebaseapp.com",
-    projectId: "formularioobra",
-    storageBucket: "formularioobra.firebasestorage.app",
-    messagingSenderId: "483554481916",
-    appId: "1:483554481916:web:c2b175955247a1b6f56979"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  let ResponsableRegistro = "";
-
-  // Ocultar splash inicial después de 1.5 segundos
-  setTimeout(function() {
-    document.getElementById("splashInicial").style.display = "none";
-    document.getElementById("splash").classList.add("active");
-  }, 1500);
-
-  // Navegación entre pantallas
-  function mostrarResponsables() {
-    document.getElementById("splash").classList.remove("active");
-    document.getElementById("responsables").classList.add("active");
-  }
-
-  function mostrarRegistroActividades() {
-    document.getElementById("splash").classList.remove("active");
-    document.getElementById("registroActividadesScreen").classList.add("active");
-    cargarActividades();
-  }
-
-  function mostrarRegistroNovedades() {
-    document.getElementById("splash").classList.remove("active");
-    document.getElementById("registroNovedadesScreen").classList.add("active");
-    cargarNovedades();
-  }
-
-  function volverAlInicio() {
-    document.getElementById("registroActividadesScreen").classList.remove("active");
-    document.getElementById("responsables").classList.remove("active");
-    document.getElementById("formularioScreen").classList.remove("active");
-    document.getElementById("registroNovedadesScreen").classList.remove("active");
-    document.getElementById("splash").classList.add("active");
-    document.getElementById("mensajeExito").innerText = "";
-    document.getElementById("mensajeActividadExito").innerText = "";
-    document.getElementById("mensajeNovedadExito").innerText = "";
-  }
-
-  function volverAlInicioDesdeResponsables() {
-    document.getElementById("responsables").classList.remove("active");
-    document.getElementById("splash").classList.add("active");
-  }
-
-  function volverAlInicioDesdeAuditoria() {
-    document.getElementById("formularioScreen").classList.remove("active");
-    document.getElementById("splash").classList.add("active");
-    document.getElementById("mensajeExito").innerText = "";
-  }
-
-  function volverAlInicioDesdeNovedades() {
-    document.getElementById("registroNovedadesScreen").classList.remove("active");
-    document.getElementById("splash").classList.add("active");
-    document.getElementById("mensajeNovedadExito").innerText = "";
-  }
-
-  function seleccionarResponsable(responsable) {
-    ResponsableRegistro = responsable;
-
-    document.getElementById("responsables").classList.remove("active");
-    document.getElementById("formularioScreen").classList.add("active");
-
-    document.getElementById("bienvenida").innerText =
-      "Bienvenido, " + responsable;
-  }
-
-  // Formulario de auditoría
-  document.getElementById("formAuditoria").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const tipoReunion = this.tipoReunion.value;
-    const nivelMadurez = this.nivelMadurez.value;
-
-    db.collection("auditoriasLean").add({
-      ResponsableRegistro: ResponsableRegistro,
-      TipoReunion: tipoReunion,
-      NivelMadurez: nivelMadurez,
-      FechaRegistro: new Date()
-    })
-    .then(() => {
-      document.getElementById("mensajeExito").innerText =
-        "Auditoría registrada correctamente.";
-      this.reset();
-    })
-    .catch(error => {
-      alert("Error al guardar: " + error);
-    });
-  });
-
-  // Formulario de actividades
-  document.getElementById("formActividad").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const detalle = this.detalle.value;
-    const prioridad = this.prioridad.value;
-
-    db.collection("actividadesLean").add({
-      detalle: detalle,
-      prioridad: prioridad,
-      estado: "Abierto",
-      fechaCreacion: new Date(),
-      fechaCompletado: null
-    })
-    .then(() => {
-      document.getElementById("mensajeActividadExito").innerText =
-        "Actividad registrada correctamente.";
-      this.reset();
-      cargarActividades();
-    })
-    .catch(error => {
-      alert("Error al guardar la actividad: " + error);
-    });
-  });
-
-  // Formulario de novedades
-  document.getElementById("formNovedad").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const proyecto = this.proyecto.value;
-    const tipo = this.tipo.value;
-    const detalle = this.detalle.value;
-
-    db.collection("novedadesAuditores").add({
-      proyecto: proyecto,
-      tipo: tipo,
-      detalle: detalle,
-      fechaRegistro: new Date()
-    })
-    .then(() => {
-      document.getElementById("mensajeNovedadExito").innerText =
-        "Novedad registrada correctamente.";
-      this.reset();
-      cargarNovedades();
-    })
-    .catch(error => {
-      alert("Error al guardar la novedad: " + error);
-    });
-  });
-
-  // Cargar y mostrar actividades
-  function cargarActividades() {
-    const listaActividades = document.getElementById("listaActividades");
-    listaActividades.innerHTML = "<h3>Actividades Registradas</h3>";
-
-    db.collection("actividadesLean")
-      .orderBy("fechaCreacion", "desc")
-      .get()
-      .then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          listaActividades.innerHTML += "<p>No hay actividades registradas.</p>";
-          return;
+    <script>
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlRbAQZVSWSZgNw8w4Iie7WsdSdogRX5o",
+            authDomain: "formularioobra.firebaseapp.com",
+            projectId: "formularioobra",
+            storageBucket: "formularioobra.firebasestorage.app",
+            messagingSenderId: "483554481916",
+            appId: "1:483554481916:web:c2b175955247a1b6f56979"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        let ResponsableRegistro = "";
+        let excelData = null; // Variable global para almacenar los datos del Excel
+        
+        // Ocultar splash inicial después de 1.5 segundos
+        setTimeout(function() {
+            document.getElementById("splashInicial").style.display = "none";
+            document.getElementById("splash").classList.add("active");
+        }, 1500);
+        
+        // ============ FUNCIONES DE NAVEGACIÓN ============
+        
+        function mostrarResponsables() {
+            document.getElementById("splash").classList.remove("active");
+            document.getElementById("responsables").classList.add("active");
         }
-
-        querySnapshot.forEach((doc) => {
-          const actividad = doc.data();
-          const actividadId = doc.id;
-          
-          const priorityClass = `priority-${actividad.prioridad.toLowerCase()}`;
-          const statusClass = actividad.estado === "Completado" ? "status-completed" : "status-open";
-          
-          const activityElement = document.createElement("div");
-          activityElement.className = `activity-item ${actividad.estado === "Completado" ? "completed" : ""}`;
-          activityElement.innerHTML = `
-            <div class="activity-header">
-              <div>
-                <span class="activity-priority ${priorityClass}">Prioridad: ${actividad.prioridad}</span>
-                <span class="activity-status ${statusClass}">${actividad.estado}</span>
-              </div>
-              <small>${new Date(actividad.fechaCreacion.seconds * 1000).toLocaleDateString()}</small>
-            </div>
-            <div class="activity-detail">${actividad.detalle}</div>
-            <div class="activity-actions">
-              <div>
-                ${actividad.fechaCompletado ? 
-                  `<small>Completado: ${new Date(actividad.fechaCompletado.seconds * 1000).toLocaleDateString()}</small>` : 
-                  ''}
-              </div>
-              <button class="complete-btn ${actividad.estado === "Completado" ? "completed" : ""}" 
-                      onclick="completarActividad('${actividadId}')" 
-                      ${actividad.estado === "Completado" ? "disabled" : ""}>
-                ${actividad.estado === "Completado" ? "✓ Completado" : "Marcar como completado"}
-              </button>
-            </div>
-          `;
-          
-          listaActividades.appendChild(activityElement);
-        });
-      })
-      .catch((error) => {
-        console.error("Error al cargar actividades: ", error);
-        listaActividades.innerHTML += "<p>Error al cargar las actividades.</p>";
-      });
-  }
-
-  // Cargar y mostrar novedades
-  function cargarNovedades() {
-    const listaNovedades = document.getElementById("listaNovedades");
-    listaNovedades.innerHTML = "<h3>Novedades Registradas</h3>";
-
-    db.collection("novedadesAuditores")
-      .orderBy("fechaRegistro", "desc")
-      .get()
-      .then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          listaNovedades.innerHTML += "<p>No hay novedades registradas.</p>";
-          return;
+        
+        function mostrarRegistroActividades() {
+            document.getElementById("splash").classList.remove("active");
+            document.getElementById("registroActividadesScreen").classList.add("active");
+            cargarActividades();
         }
-
-        querySnapshot.forEach((doc) => {
-          const novedad = doc.data();
-          const novedadId = doc.id;
-          
-          const typeClass = `type-${novedad.tipo.toLowerCase().split(' ')[0]}`;
-          const itemClass = novedad.tipo.toLowerCase().split(' ')[0];
-          
-          const noteElement = document.createElement("div");
-          noteElement.className = `note-item ${itemClass}`;
-          noteElement.innerHTML = `
-            <div class="note-header">
-              <div>
-                <div class="project-name">${novedad.proyecto}</div>
-                <span class="note-type ${typeClass}">${novedad.tipo}</span>
-              </div>
-              <small>${new Date(novedad.fechaRegistro.seconds * 1000).toLocaleDateString()}</small>
-            </div>
-            <div class="note-detail">${novedad.detalle}</div>
-          `;
-          
-          listaNovedades.appendChild(noteElement);
+        
+        function mostrarRegistroNovedades() {
+            document.getElementById("splash").classList.remove("active");
+            document.getElementById("registroNovedadesScreen").classList.add("active");
+            cargarNovedades();
+        }
+        
+        function mostrarSellosCalidad() {
+            document.getElementById("splash").classList.remove("active");
+            document.getElementById("sellosCalidadScreen").classList.add("active");
+            
+            // Configurar la URL correcta del archivo en tu repositorio
+            const fileUrl = "https://raw.githubusercontent.com/bautistapulgarin/Formulario-Lean/main/AnaliticaSellos.xlsx";
+            
+            // Mostrar la URL en pantalla
+            document.getElementById("fileUrl").textContent = fileUrl;
+            
+            // Cargar el archivo Excel automáticamente al entrar al módulo
+            cargarExcelDesdeGitHub();
+        }
+        
+        function volverAlInicio() {
+            document.getElementById("registroActividadesScreen").classList.remove("active");
+            document.getElementById("responsables").classList.remove("active");
+            document.getElementById("formularioScreen").classList.remove("active");
+            document.getElementById("registroNovedadesScreen").classList.remove("active");
+            document.getElementById("sellosCalidadScreen").classList.remove("active");
+            document.getElementById("splash").classList.add("active");
+            document.getElementById("mensajeExito").innerText = "";
+            document.getElementById("mensajeActividadExito").innerText = "";
+            document.getElementById("mensajeNovedadExito").innerText = "";
+        }
+        
+        function volverAlInicioDesdeResponsables() {
+            document.getElementById("responsables").classList.remove("active");
+            document.getElementById("splash").classList.add("active");
+        }
+        
+        function volverAlInicioDesdeAuditoria() {
+            document.getElementById("formularioScreen").classList.remove("active");
+            document.getElementById("splash").classList.add("active");
+            document.getElementById("mensajeExito").innerText = "";
+        }
+        
+        function volverAlInicioDesdeNovedades() {
+            document.getElementById("registroNovedadesScreen").classList.remove("active");
+            document.getElementById("splash").classList.add("active");
+            document.getElementById("mensajeNovedadExito").innerText = "";
+        }
+        
+        function volverAlInicioDesdeSellos() {
+            document.getElementById("sellosCalidadScreen").classList.remove("active");
+            document.getElementById("splash").classList.add("active");
+        }
+        
+        function seleccionarResponsable(responsable) {
+            ResponsableRegistro = responsable;
+            document.getElementById("responsables").classList.remove("active");
+            document.getElementById("formularioScreen").classList.add("active");
+            document.getElementById("bienvenida").innerText = "Bienvenido, " + responsable;
+        }
+        
+        // ============ FUNCIONES PARA EL NUEVO MÓDULO SELLOS DE CALIDAD ============
+        
+        async function cargarExcelDesdeGitHub() {
+            const loadingIndicator = document.getElementById("loadingIndicator");
+            const statusMessage = document.getElementById("statusMessage");
+            const dataCount = document.getElementById("dataCount");
+            
+            // Mostrar indicador de carga
+            loadingIndicator.style.display = "inline-block";
+            statusMessage.innerHTML = "";
+            dataCount.innerHTML = "Cargando datos del Excel...";
+            
+            try {
+                // URL del archivo Excel en tu repositorio GitHub
+                const fileUrl = "https://raw.githubusercontent.com/bautistapulgarin/Formulario-Lean/main/AnaliticaSellos.xlsx";
+                
+                console.log("Intentando cargar archivo desde:", fileUrl);
+                
+                // Descargar el archivo
+                const response = await fetch(fileUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
+                // Convertir a array buffer
+                const arrayBuffer = await response.arrayBuffer();
+                
+                // Leer el archivo Excel
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                
+                // Obtener la primera hoja
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                
+                // Convertir a JSON (con encabezados)
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                
+                // Limitar a las primeras 100 columnas
+                const limitedData = jsonData.map(row => {
+                    if (Array.isArray(row)) {
+                        return row.slice(0, 100); // Tomar solo las primeras 100 columnas
+                    }
+                    return row;
+                });
+                
+                // Guardar datos globalmente
+                excelData = limitedData;
+                
+                // Mostrar los datos en la tabla
+                mostrarDatosEnTabla(limitedData);
+                
+                // Actualizar contador
+                const rowCount = limitedData.length - 1; // Restar 1 por el encabezado
+                const colCount = limitedData[0] ? limitedData[0].length : 0;
+                dataCount.innerHTML = `
+                    <strong>Datos cargados exitosamente</strong><br>
+                    Filas: ${rowCount} | Columnas: ${colCount} (mostrando las primeras 100 columnas)
+                `;
+                
+                // Mostrar mensaje de éxito
+                statusMessage.innerHTML = `
+                    <div class="status-message status-success">
+                        ✓ Archivo cargado exitosamente desde GitHub
+                    </div>
+                `;
+                
+                console.log("Datos cargados:", limitedData);
+                
+            } catch (error) {
+                console.error("Error al cargar el archivo:", error);
+                
+                // Mostrar mensaje de error
+                statusMessage.innerHTML = `
+                    <div class="status-message status-error">
+                        ✗ Error al cargar el archivo: ${error.message}<br>
+                        <small>Verifica que el archivo exista en: https://raw.githubusercontent.com/bautistapulgarin/Formulario-Lean/main/AnaliticaSellos.xlsx</small>
+                    </div>
+                `;
+                
+                dataCount.innerHTML = "Error al cargar los datos. Verifica que el archivo exista.";
+            } finally {
+                // Ocultar indicador de carga
+                loadingIndicator.style.display = "none";
+            }
+        }
+        
+        function mostrarDatosEnTabla(data) {
+            const tableHeader = document.getElementById("tableHeader");
+            const tableBody = document.getElementById("tableBody");
+            
+            // Limpiar tabla existente
+            tableHeader.innerHTML = "";
+            tableBody.innerHTML = "";
+            
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="100" style="text-align: center; padding: 40px;">
+                            No hay datos para mostrar
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Crear encabezados (primera fila)
+            const headerRow = document.createElement("tr");
+            
+            if (data[0]) {
+                data[0].forEach((header, index) => {
+                    const th = document.createElement("th");
+                    th.textContent = header || `Columna ${index + 1}`;
+                    th.title = header || `Columna ${index + 1}`;
+                    headerRow.appendChild(th);
+                });
+            }
+            
+            tableHeader.appendChild(headerRow);
+            
+            // Crear filas de datos (a partir de la segunda fila)
+            for (let i = 1; i < data.length; i++) {
+                const rowData = data[i];
+                const row = document.createElement("tr");
+                
+                if (rowData && Array.isArray(rowData)) {
+                    rowData.forEach((cell, index) => {
+                        const td = document.createElement("td");
+                        
+                        // Manejar diferentes tipos de datos
+                        if (cell === null || cell === undefined) {
+                            td.textContent = "";
+                        } else if (typeof cell === 'object') {
+                            td.textContent = JSON.stringify(cell);
+                        } else {
+                            td.textContent = cell;
+                        }
+                        
+                        // Limitar texto largo
+                        if (td.textContent.length > 100) {
+                            td.textContent = td.textContent.substring(0, 100) + '...';
+                            td.title = cell;
+                        }
+                        
+                        row.appendChild(td);
+                    });
+                }
+                
+                // Rellenar celdas vacías si la fila tiene menos columnas que el encabezado
+                if (data[0] && rowData && rowData.length < data[0].length) {
+                    for (let j = rowData.length; j < data[0].length; j++) {
+                        const td = document.createElement("td");
+                        td.textContent = "";
+                        row.appendChild(td);
+                    }
+                }
+                
+                tableBody.appendChild(row);
+            }
+        }
+        
+        function filtrarTabla() {
+            const searchInput = document.getElementById("searchInput");
+            const filter = searchInput.value.toLowerCase();
+            const table = document.getElementById("sellosTable");
+            const rows = table.getElementsByTagName("tr");
+            
+            // Empezar desde la fila 1 para saltar el encabezado
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                let textContent = "";
+                
+                // Concatenar todo el texto de la fila
+                const cells = row.getElementsByTagName("td");
+                for (let j = 0; j < cells.length; j++) {
+                    textContent += cells[j].textContent.toLowerCase() + " ";
+                }
+                
+                // Mostrar u ocultar la fila según coincida con el filtro
+                if (textContent.indexOf(filter) > -1) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        }
+        
+        function descargarDatos() {
+            if (!excelData || excelData.length === 0) {
+                alert("No hay datos para descargar. Primero carga el archivo Excel.");
+                return;
+            }
+            
+            // Convertir datos a CSV
+            let csvContent = "data:text/csv;charset=utf-8,";
+            
+            excelData.forEach(row => {
+                if (Array.isArray(row)) {
+                    // Escapar comillas y manejar valores nulos
+                    const escapedRow = row.map(cell => {
+                        if (cell === null || cell === undefined) return '';
+                        const cellString = String(cell);
+                        // Si contiene comas o saltos de línea, poner entre comillas
+                        if (cellString.includes(',') || cellString.includes('\n') || cellString.includes('"')) {
+                            return '"' + cellString.replace(/"/g, '""') + '"';
+                        }
+                        return cellString;
+                    });
+                    csvContent += escapedRow.join(',') + "\n";
+                }
+            });
+            
+            // Crear enlace de descarga
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "AnaliticaSellos_primera100columnas.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // ============ FORMULARIOS EXISTENTES (se mantienen igual) ============
+        
+        // Formulario de auditoría
+        document.getElementById("formAuditoria").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const tipoReunion = this.tipoReunion.value;
+            const nivelMadurez = this.nivelMadurez.value;
+            
+            db.collection("auditoriasLean").add({
+                ResponsableRegistro: ResponsableRegistro,
+                TipoReunion: tipoReunion,
+                NivelMadurez: nivelMadurez,
+                FechaRegistro: new Date()
+            })
+            .then(() => {
+                document.getElementById("mensajeExito").innerText = "Auditoría registrada correctamente.";
+                this.reset();
+            })
+            .catch(error => {
+                alert("Error al guardar: " + error);
+            });
         });
-      })
-      .catch((error) => {
-        console.error("Error al cargar novedades: ", error);
-        listaNovedades.innerHTML += "<p>Error al cargar las novedades.</p>";
-      });
-  }
-
-  // Función para completar una actividad
-  function completarActividad(actividadId) {
-    db.collection("actividadesLean").doc(actividadId).update({
-      estado: "Completado",
-      fechaCompletado: new Date()
-    })
-    .then(() => {
-      cargarActividades();
-    })
-    .catch((error) => {
-      alert("Error al actualizar la actividad: " + error);
-    });
-  }
-</script>
-
+        
+        // Formulario de actividades
+        document.getElementById("formActividad").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const detalle = this.detalle.value;
+            const prioridad = this.prioridad.value;
+            
+            db.collection("actividadesLean").add({
+                detalle: detalle,
+                prioridad: prioridad,
+                estado: "Abierto",
+                fechaCreacion: new Date(),
+                fechaCompletado: null
+            })
+            .then(() => {
+                document.getElementById("mensajeActividadExito").innerText = "Actividad registrada correctamente.";
+                this.reset();
+                cargarActividades();
+            })
+            .catch(error => {
+                alert("Error al guardar la actividad: " + error);
+            });
+        });
+        
+        // Formulario de novedades
+        document.getElementById("formNovedad").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const proyecto = this.proyecto.value;
+            const tipo = this.tipo.value;
+            const detalle = this.detalle.value;
+            
+            db.collection("novedadesAuditores").add({
+                proyecto: proyecto,
+                tipo: tipo,
+                detalle: detalle,
+                fechaRegistro: new Date()
+            })
+            .then(() => {
+                document.getElementById("mensajeNovedadExito").innerText = "Novedad registrada correctamente.";
+                this.reset();
+                cargarNovedades();
+            })
+            .catch(error => {
+                alert("Error al guardar la novedad: " + error);
+            });
+        });
+        
+        // ============ FUNCIONES EXISTENTES ============
+        
+        // Cargar y mostrar actividades
+        function cargarActividades() {
+            const listaActividades = document.getElementById("listaActividades");
+            listaActividades.innerHTML = "<h3>Actividades Registradas</h3>";
+            
+            db.collection("actividadesLean")
+                .orderBy("fechaCreacion", "desc")
+                .get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        listaActividades.innerHTML += "<p>No hay actividades registradas.</p>";
+                        return;
+                    }
+                    
+                    querySnapshot.forEach((doc) => {
+                        const actividad = doc.data();
+                        const actividadId = doc.id;
+                        const priorityClass = `priority-${actividad.prioridad.toLowerCase()}`;
+                        const statusClass = actividad.estado === "Completado" ? "status-completed" : "status-open";
+                        
+                        const activityElement = document.createElement("div");
+                        activityElement.className = `activity-item ${actividad.estado === "Completado" ? "completed" : ""}`;
+                        activityElement.innerHTML = `
+                            <div class="activity-header">
+                                <div>
+                                    <span class="activity-priority ${priorityClass}">Prioridad: ${actividad.prioridad}</span>
+                                    <span class="activity-status ${statusClass}">${actividad.estado}</span>
+                                </div>
+                                <small>${new Date(actividad.fechaCreacion.seconds * 1000).toLocaleDateString()}</small>
+                            </div>
+                            <div class="activity-detail">${actividad.detalle}</div>
+                            <div class="activity-actions">
+                                <div>
+                                    ${actividad.fechaCompletado ? 
+                                        `<small>Completado: ${new Date(actividad.fechaCompletado.seconds * 1000).toLocaleDateString()}</small>` : 
+                                        ''}
+                                </div>
+                                <button class="complete-btn ${actividad.estado === "Completado" ? "completed" : ""}" 
+                                        onclick="completarActividad('${actividadId}')" 
+                                        ${actividad.estado === "Completado" ? "disabled" : ""}>
+                                    ${actividad.estado === "Completado" ? "✓ Completado" : "Marcar como completado"}
+                                </button>
+                            </div>
+                        `;
+                        listaActividades.appendChild(activityElement);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error al cargar actividades: ", error);
+                    listaActividades.innerHTML += "<p>Error al cargar las actividades.</p>";
+                });
+        }
+        
+        // Cargar y mostrar novedades
+        function cargarNovedades() {
+            const listaNovedades = document.getElementById("listaNovedades");
+            listaNovedades.innerHTML = "<h3>Novedades Registradas</h3>";
+            
+            db.collection("novedadesAuditores")
+                .orderBy("fechaRegistro", "desc")
+                .get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        listaNovedades.innerHTML += "<p>No hay novedades registradas.</p>";
+                        return;
+                    }
+                    
+                    querySnapshot.forEach((doc) => {
+                        const novedad = doc.data();
+                        const novedadId = doc.id;
+                        const typeClass = `type-${novedad.tipo.toLowerCase().split(' ')[0]}`;
+                        const itemClass = novedad.tipo.toLowerCase().split(' ')[0];
+                        
+                        const noteElement = document.createElement("div");
+                        noteElement.className = `note-item ${itemClass}`;
+                        noteElement.innerHTML = `
+                            <div class="note-header">
+                                <div>
+                                    <div class="project-name">${novedad.proyecto}</div>
+                                    <span class="note-type ${typeClass}">${novedad.tipo}</span>
+                                </div>
+                                <small>${new Date(novedad.fechaRegistro.seconds * 1000).toLocaleDateString()}</small>
+                            </div>
+                            <div class="note-detail">${novedad.detalle}</div>
+                        `;
+                        listaNovedades.appendChild(noteElement);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error al cargar novedades: ", error);
+                    listaNovedades.innerHTML += "<p>Error al cargar las novedades.</p>";
+                });
+        }
+        
+        // Función para completar una actividad
+        function completarActividad(actividadId) {
+            db.collection("actividadesLean").doc(actividadId).update({
+                estado: "Completado",
+                fechaCompletado: new Date()
+            })
+            .then(() => {
+                cargarActividades();
+            })
+            .catch((error) => {
+                alert("Error al actualizar la actividad: " + error);
+            });
+        }
+    </script>
 </body>
 </html>
